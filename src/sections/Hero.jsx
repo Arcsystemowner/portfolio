@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
-import { FiArrowDown, FiDownload } from 'react-icons/fi';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { motion } from "framer-motion";
+import { FiArrowDown, FiDownload } from "react-icons/fi";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 const container = {
   hidden: {},
@@ -8,12 +8,12 @@ const container = {
 };
 const item = {
   hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
 export default function Hero() {
   const scrollTo = (id) =>
-    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+    document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <section
@@ -30,8 +30,8 @@ export default function Hero() {
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage:
-              'linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
+              "linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
           }}
         />
       </div>
@@ -52,35 +52,65 @@ export default function Hero() {
           </motion.div>
 
           {/* Greeting */}
-          <motion.p variants={item} className="text-slate-400 font-mono text-sm mb-2 tracking-wider">
+          <motion.p
+            variants={item}
+            className="text-slate-400 font-mono text-sm mb-2 tracking-wider"
+          >
             Hi, I'm
           </motion.p>
 
           {/* Name */}
-          <motion.h1 variants={item} className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-3">
-            Archit{' '}
-            <span className="gradient-text">Yadav</span>
+          <motion.h1
+            variants={item}
+            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-tight mb-3"
+          >
+            Archit <span className="gradient-text">Yadav</span>
           </motion.h1>
 
           {/* Role */}
-          <motion.h2 variants={item} className="text-xl sm:text-2xl font-semibold text-slate-300 mb-4">
-            Frontend Developer{' '}
-            <span className="text-primary-400">|</span>{' '}
-            MERN Stack Developer
+          <motion.h2
+            variants={item}
+            className="text-xl sm:text-2xl font-semibold text-slate-300 mb-4"
+          >
+            Full Stack Developer <span className="text-primary-400">|</span>{" "}
+            React.js + Java
           </motion.h2>
 
           {/* Tagline */}
-          <motion.p variants={item} className="text-slate-400 text-lg max-w-xl leading-relaxed mb-10">
-            Building{' '}
-            <span className="text-white font-medium">scalable</span> and{' '}
-            <span className="text-white font-medium">high-performance</span> web
-            applications. Currently at{' '}
-            <span className="text-primary-400 font-medium">KFin Technologies</span>.
+          <motion.p
+            variants={item}
+            className="text-slate-400 text-lg max-w-2xl leading-relaxed mb-10"
+          >
+            Building{" "}
+            <span className="text-white font-medium">
+              scalable, high-performance
+            </span>{" "}
+            web applications with{" "}
+            <span className="text-white font-medium">React.js</span> and{" "}
+            <span className="text-white font-medium">Java</span>. Specialized in{" "}
+            <span className="text-primary-400 font-medium">
+              performance optimization
+            </span>
+            ,{" "}
+            <span className="text-primary-400 font-medium">
+              enterprise systems
+            </span>
+            , and{" "}
+            <span className="text-primary-400 font-medium">
+              scalable architectures
+            </span>
+            .
           </motion.p>
 
           {/* CTAs */}
-          <motion.div variants={item} className="flex flex-wrap items-center gap-4 mb-12">
-            <button onClick={() => scrollTo('#projects')} className="btn-primary">
+          <motion.div
+            variants={item}
+            className="flex flex-wrap items-center gap-4 mb-12"
+          >
+            <button
+              onClick={() => scrollTo("#projects")}
+              className="btn-primary"
+            >
               View Projects
               <FiArrowDown size={16} />
             </button>
@@ -88,7 +118,7 @@ export default function Hero() {
               href="/resume.pdf"
               download
               className="btn-outline"
-              onClick={() => console.log('Resume downloaded')}
+              onClick={() => console.log("Resume downloaded")}
             >
               <FiDownload size={16} />
               Download Resume
@@ -116,7 +146,9 @@ export default function Hero() {
               <FaLinkedin size={22} />
             </a>
             <div className="h-px w-16 bg-white/10" />
-            <span className="text-slate-500 text-sm font-mono">archityadav.dev</span>
+            <span className="text-slate-500 text-sm font-mono">
+              archityadav.dev
+            </span>
           </motion.div>
         </motion.div>
 
