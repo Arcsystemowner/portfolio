@@ -1,37 +1,45 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FiMail, FiSend, FiGithub, FiLinkedin, FiCheckCircle } from 'react-icons/fi';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  FiMail,
+  FiSend,
+  FiGithub,
+  FiLinkedin,
+  FiCheckCircle,
+} from "react-icons/fi";
 
-const initialForm = { name: '', email: '', message: '' };
+const initialForm = { name: "", email: "", message: "" };
 
 function validate(form) {
   const errors = {};
-  if (!form.name.trim()) errors.name = 'Name is required';
-  if (!form.email.trim()) errors.email = 'Email is required';
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'Invalid email';
-  if (!form.message.trim()) errors.message = 'Message is required';
-  else if (form.message.trim().length < 10) errors.message = 'Message too short';
+  if (!form.name.trim()) errors.name = "Name is required";
+  if (!form.email.trim()) errors.email = "Email is required";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+    errors.email = "Invalid email";
+  if (!form.message.trim()) errors.message = "Message is required";
+  else if (form.message.trim().length < 10)
+    errors.message = "Message too short";
   return errors;
 }
 
 const socials = [
   {
     icon: <FiMail size={20} />,
-    label: 'Email',
-    value: 'archit.yadav@email.com',
-    href: 'mailto:archit.yadav@email.com',
+    label: "Email",
+    value: "archityadav959@gmail.com",
+    href: "mailto:archityadav959@gmail.com",
   },
   {
     icon: <FiLinkedin size={20} />,
-    label: 'LinkedIn',
-    value: 'linkedin.com/in/archityadav',
-    href: 'https://linkedin.com/in/archityadav',
+    label: "LinkedIn",
+    value: "linkedin.com/in/archit-yadav-bb0a47187",
+    href: "https://linkedin.com/in/archit-yadav-bb0a47187",
   },
   {
     icon: <FiGithub size={20} />,
-    label: 'GitHub',
-    value: 'github.com/archityadav',
-    href: 'https://github.com/archityadav',
+    label: "GitHub",
+    value: "github.com/Arcsystemowner",
+    href: "https://github.com/Arcsystemowner",
   },
 ];
 
@@ -44,13 +52,16 @@ export default function Contact() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
-    if (errors[name]) setErrors((e) => ({ ...e, [name]: '' }));
+    if (errors[name]) setErrors((e) => ({ ...e, [name]: "" }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate(form);
-    if (Object.keys(errs).length) { setErrors(errs); return; }
+    if (Object.keys(errs).length) {
+      setErrors(errs);
+      return;
+    }
     setSending(true);
     // Simulate send (integrate EmailJS here)
     await new Promise((r) => setTimeout(r, 1500));
@@ -60,7 +71,7 @@ export default function Contact() {
   };
 
   const inputClass = (field) =>
-    `w-full bg-white/5 border ${errors[field] ? 'border-rose-500/60' : 'border-white/10'}
+    `w-full bg-white/5 border ${errors[field] ? "border-rose-500/60" : "border-white/10"}
      rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500
      focus:outline-none focus:border-primary-500/60 focus:bg-white/8
      transition-all duration-200`;
@@ -75,11 +86,14 @@ export default function Contact() {
           transition={{ duration: 0.5 }}
           className="mb-14"
         >
-          <p className="text-primary-400 font-mono text-sm tracking-widest mb-2">05. CONTACT</p>
+          <p className="text-primary-400 font-mono text-sm tracking-widest mb-2">
+            05. CONTACT
+          </p>
           <h2 className="section-title">Get In Touch</h2>
           <div className="w-12 h-1 bg-gradient-to-r from-primary-500 to-violet-500 rounded-full mb-4" />
           <p className="section-subtitle">
-            Have a project in mind or just want to chat? I'd love to hear from you.
+            Have a project in mind or just want to chat? I'd love to hear from
+            you.
           </p>
         </motion.div>
 
@@ -106,9 +120,11 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 p-4 card rounded-xl group"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-primary-500/10 border border-primary-500/20
+                  <div
+                    className="w-10 h-10 rounded-lg bg-primary-500/10 border border-primary-500/20
                                   flex items-center justify-center text-primary-400
-                                  group-hover:bg-primary-500/20 transition-colors">
+                                  group-hover:bg-primary-500/20 transition-colors"
+                  >
                     {icon}
                   </div>
                   <div>
@@ -135,47 +151,70 @@ export default function Contact() {
               >
                 <FiCheckCircle size={48} className="text-emerald-400" />
                 <h3 className="text-xl font-bold text-white">Message Sent!</h3>
-                <p className="text-slate-400">Thanks for reaching out. I'll get back to you soon.</p>
-                <button onClick={() => setSubmitted(false)} className="btn-outline mt-2">
+                <p className="text-slate-400">
+                  Thanks for reaching out. I'll get back to you soon.
+                </p>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="btn-outline mt-2"
+                >
                   Send Another
                 </button>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="card p-7 space-y-5" noValidate>
+              <form
+                onSubmit={handleSubmit}
+                className="card p-7 space-y-5"
+                noValidate
+              >
                 <div>
-                  <label className="block text-sm text-slate-400 mb-1.5 font-medium">Name</label>
+                  <label className="block text-sm text-slate-400 mb-1.5 font-medium">
+                    Name
+                  </label>
                   <input
                     name="name"
                     value={form.name}
                     onChange={handleChange}
                     placeholder="Your full name"
-                    className={inputClass('name')}
+                    className={inputClass("name")}
                   />
-                  {errors.name && <p className="text-xs text-rose-400 mt-1">{errors.name}</p>}
+                  {errors.name && (
+                    <p className="text-xs text-rose-400 mt-1">{errors.name}</p>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-400 mb-1.5 font-medium">Email</label>
+                  <label className="block text-sm text-slate-400 mb-1.5 font-medium">
+                    Email
+                  </label>
                   <input
                     type="email"
                     name="email"
                     value={form.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className={inputClass('email')}
+                    className={inputClass("email")}
                   />
-                  {errors.email && <p className="text-xs text-rose-400 mt-1">{errors.email}</p>}
+                  {errors.email && (
+                    <p className="text-xs text-rose-400 mt-1">{errors.email}</p>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-400 mb-1.5 font-medium">Message</label>
+                  <label className="block text-sm text-slate-400 mb-1.5 font-medium">
+                    Message
+                  </label>
                   <textarea
                     name="message"
                     value={form.message}
                     onChange={handleChange}
                     rows={5}
                     placeholder="Tell me about your project or just say hi..."
-                    className={inputClass('message') + ' resize-none'}
+                    className={inputClass("message") + " resize-none"}
                   />
-                  {errors.message && <p className="text-xs text-rose-400 mt-1">{errors.message}</p>}
+                  {errors.message && (
+                    <p className="text-xs text-rose-400 mt-1">
+                      {errors.message}
+                    </p>
+                  )}
                 </div>
                 <button
                   type="submit"
