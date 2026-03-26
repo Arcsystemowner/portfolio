@@ -4,7 +4,7 @@ export const experience = [
     company: 'KFin Technologies Limited',
     role: 'Software Engineer',
     period: 'April 2024 – Present',
-    location: 'Jhansi, India',
+    location: 'Hyderabad, India',
     type: 'Full-time',
     description:
       'Building enterprise-level full-stack applications and monitoring tools handling 100,000+ services. Focused on performance optimization, scalable architectures, and robust systems.',

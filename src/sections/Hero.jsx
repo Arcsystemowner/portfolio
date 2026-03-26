@@ -107,44 +107,62 @@ export default function Hero() {
             variants={item}
             className="flex flex-wrap items-center gap-4 mb-12"
           >
-            <button
+            <motion.button
               onClick={() => scrollTo("#projects")}
-              className="btn-primary"
+              className="btn-primary group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               View Projects
-              <FiArrowDown size={16} />
-            </button>
-            <a
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <FiArrowDown size={16} />
+              </motion.span>
+            </motion.button>
+            <motion.a
               href="/resume.pdf"
               download
-              className="btn-outline"
+              className="btn-outline group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => console.log("Resume downloaded")}
             >
-              <FiDownload size={16} />
+              <motion.span
+                animate={{ rotate: [0, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <FiDownload size={16} />
+              </motion.span>
               Download Resume
-            </a>
+            </motion.a>
           </motion.div>
 
           {/* Social links */}
           <motion.div variants={item} className="flex items-center gap-4">
-            <a
-              href="https://github.com/archityadav"
+            <motion.a
+              href="https://github.com/Arcsystemowner"
               target="_blank"
               rel="noopener noreferrer"
               className="text-slate-500 hover:text-white transition-colors"
+              whileHover={{ scale: 1.2, rotate: 10 }}
+              whileTap={{ scale: 0.9 }}
               aria-label="GitHub"
             >
               <FaGithub size={22} />
-            </a>
-            <a
-              href="https://linkedin.com/in/archityadav"
+            </motion.a>
+            <motion.a
+              href="https://linkedin.com/in/archit-yadav-bb0a47187"
               target="_blank"
               rel="noopener noreferrer"
               className="text-slate-500 hover:text-primary-400 transition-colors"
+              whileHover={{ scale: 1.2, rotate: -10 }}
+              whileTap={{ scale: 0.9 }}
               aria-label="LinkedIn"
             >
               <FaLinkedin size={22} />
-            </a>
+            </motion.a>
             <div className="h-px w-16 bg-white/10" />
             <span className="text-slate-500 text-sm font-mono">
               archityadav.dev
