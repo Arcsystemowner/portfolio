@@ -79,7 +79,7 @@ export default function Navbar() {
         {/* Right controls */}
         <div className="flex items-center gap-2">
           {/* Theme toggle */}
-          <motion.button
+          {/* <motion.button
             onClick={toggleTheme}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -98,7 +98,7 @@ export default function Navbar() {
                 {isDark ? <FiSun size={16} /> : <FiMoon size={16} />}
               </motion.span>
             </AnimatePresence>
-          </motion.button>
+          </motion.button> */}
 
           {/* Mobile menu toggle */}
           <button
