@@ -26,8 +26,11 @@ export default function Navbar() {
   }, []);
 
   const handleNav = (href) => {
-    setMenuOpen(false);
     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    // Add a slight delay before closing to ensure the click registers smoothly on mobile
+    setTimeout(() => {
+      setMenuOpen(false);
+    }, 200);
   };
 
   return (
@@ -124,15 +127,19 @@ export default function Navbar() {
           >
             <nav className="flex flex-col px-4 py-4 gap-2">
               {navLinks.map(({ label, href, id }) => (
-                <button
+                <a
                   key={label}
-                  onClick={() => handleNav(href)}
+                  href={href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNav(href);
+                  }}
                   className={`block w-full text-left px-4 py-3 rounded-xl text-base font-medium transition-all ${
                     activeSection === id ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
                   }`}
                 >
                   {label}
-                </button>
+                </a>
               ))}
             </nav>
           </motion.div>
