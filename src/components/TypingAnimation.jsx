@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 
 const ROLES = [
-  'Software Engineer',
-  'Java Full Stack Developer',
-  // 'Problem Solver',
+  'Distributed Systems',
+  'Real-Time Platforms',
+  'Scalable Backend Systems',
+  'Observability Engineering',
+  'Full Stack Development'
 ];
 
 const TYPE_SPEED = 110;       // ms per character while typing

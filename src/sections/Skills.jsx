@@ -9,6 +9,7 @@ import {
 } from 'react-icons/si';
 import { FiZap, FiLayout, FiShield, FiCloud, FiGitBranch, FiActivity } from 'react-icons/fi';
 import SectionHeader from '../components/SectionHeader';
+import SkillsNetwork from '../components/SkillsNetwork';
 
 const categories = ['All', 'Frontend', 'Backend', 'Database', 'Concepts'];
 
@@ -30,65 +31,19 @@ const allSkills = [
 ];
 
 export default function Skills() {
-  const [activeCategory, setActiveCategory] = useState('All');
-  const filtered = activeCategory === 'All' ? allSkills : allSkills.filter((s) => s.category === activeCategory);
-
   return (
     <section id="skills" className="relative">
       <div className="section-container">
-        <SectionHeader number="02" label="Skills" title="Technical Expertise" subtitle="Technologies and tools I use to build production-grade software." />
-
-        {/* Filter tabs */}
-        <div className="flex flex-wrap gap-2 mb-10">
-          {categories.map((cat) => (
-            <motion.button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              id={`skills-filter-${cat.toLowerCase()}`}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 border ${
-                activeCategory === cat
-                  ? 'bg-primary-500/20 border-primary-500/60 text-primary-300'
-                  : 'border-white/10 text-slate-500 hover:border-white/20 hover:text-slate-300'
-              }`}
-            >
-              {cat}
-            </motion.button>
-          ))}
+        <SectionHeader 
+          number="02" 
+          label="Skills & Expertise" 
+          title="Technology Constellation" 
+          subtitle="An interactive map of my technical proficiencies across distributed systems, backend engineering, and frontend development." 
+        />
+        
+        <div className="mt-8">
+          <SkillsNetwork />
         </div>
-
-        {/* Grid */}
-        <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {filtered.map((skill, i) => (
-            <motion.div
-              key={skill.name}
-              layout
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.85 }}
-              transition={{ duration: 0.3, delay: i * 0.04 }}
-              whileHover={{ y: -5, scale: 1.03 }}
-              className={`relative group p-5 rounded-2xl bg-gradient-to-br ${skill.color} border ${skill.border} cursor-default overflow-hidden`}
-            >
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: 'radial-gradient(circle at 50% 0%, rgba(99,102,241,0.15), transparent 70%)' }} />
-              <div className="relative">
-                <div className="mb-3">{skill.icon}</div>
-                <p className="text-sm font-semibold text-white mb-2">{skill.name}</p>
-                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${skill.level}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: i * 0.03, ease: 'easeOut' }}
-                    className="h-full rounded-full bg-gradient-to-r from-primary-500 to-violet-500"
-                  />
-                </div>
-                <p className="text-xs text-slate-500 mt-1.5 font-mono">{skill.level}%</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );

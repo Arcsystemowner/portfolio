@@ -3,8 +3,10 @@ import { FiArrowDown, FiDownload } from 'react-icons/fi';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { SiReact, SiSpringboot, SiJavascript, SiDocker } from 'react-icons/si';
 import { FaJava } from 'react-icons/fa';
-import ParticleBackground from '../components/ParticleBackground';
+import React, { Suspense, lazy } from 'react';
 import TypingAnimation from '../components/TypingAnimation';
+
+const ParticleBackground = lazy(() => import('../components/ParticleBackground'));
 
 const container = {
   hidden: {},
@@ -33,7 +35,9 @@ export default function Hero() {
       className="relative min-h-screen flex items-center overflow-hidden pt-20"
     >
       {/* Particle canvas */}
-      <ParticleBackground />
+      <Suspense fallback={<div className="absolute inset-0 bg-dark-900 pointer-events-none z-0" />}>
+        <ParticleBackground />
+      </Suspense>
 
       {/* Background blobs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -60,22 +64,15 @@ export default function Hero() {
             animate="show"
             className="max-w-2xl"
           >
-            {/* Status badge */}
-            <motion.div variants={item} className="mb-8">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-sm font-medium backdrop-blur-sm">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Open to new opportunities
-                <span className="text-emerald-600">•</span>
-                <span className="text-emerald-600 text-xs">Available now</span>
-              </span>
-            </motion.div>
+          
 
             {/* Greeting */}
             <motion.p
               variants={item}
-              className="text-slate-400 font-mono text-sm mb-3 tracking-widest uppercase"
+              className="text-primary-400 font-mono text-sm mb-3 tracking-widest uppercase flex items-center gap-2"
             >
-              Hi there, I'm
+              <span className="w-4 h-px bg-primary-500/50"></span>
+              SYS.ADMIN // IDENTIFIED
             </motion.p>
 
             {/* Name */}
@@ -109,12 +106,9 @@ export default function Hero() {
               variants={item}
               className="text-slate-400 text-base sm:text-lg max-w-xl leading-relaxed mb-10"
             >
-              Building{' '}
-              <span className="text-white font-medium">scalable, high-performance</span>{' '}
-              web applications with{' '}
-              <span className="text-primary-400 font-medium">React.js</span> and{' '}
-              <span className="text-primary-400 font-medium">Java Spring Boot</span>.
-              Specialized in enterprise systems, real-time dashboards, and performance optimization.
+              Architecting <span className="text-white font-medium">scalable distributed systems</span> and{' '}
+              <span className="text-primary-400 font-medium">real-time platforms</span>. 
+              Specializing in observability infrastructure, event-driven architecture, and enterprise-grade full-stack applications.
             </motion.p>
 
             {/* CTAs */}
@@ -131,12 +125,6 @@ export default function Hero() {
               >
                 <span className="relative z-10 flex items-center gap-2">
                   View Projects
-                  <motion.span
-                    animate={{ x: [0, 4, 0] }}
-                    transition={{ duration: 1.4, repeat: Infinity }}
-                  >
-                    <FiArrowDown size={16} />
-                  </motion.span>
                 </span>
                 {/* Shimmer */}
                 <motion.span
@@ -161,8 +149,18 @@ export default function Hero() {
                 >
                   <FiDownload size={16} />
                 </motion.span>
-                Download Resume
+                Resume
               </motion.a>
+
+              <motion.button
+                onClick={() => scrollTo('#contact')}
+                className="btn-outline border-transparent bg-dark-800 hover:bg-dark-700 hover:text-white group"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                id="hero-contact-btn"
+              >
+                Contact Me
+              </motion.button>
             </motion.div>
 
             {/* Social links */}
@@ -205,79 +203,108 @@ export default function Hero() {
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, delay: 0.5, ease: 'easeOut' }}
-            className="hidden lg:block"
+            className="hidden lg:block relative"
           >
-            {/* Code card */}
-            <div className="relative w-72">
+            {/* Holographic System Monitor Card */}
+            <div className="relative w-80">
               <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="glass rounded-2xl p-5 border border-white/10 shadow-2xl"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                className="glass rounded-xl p-5 border border-primary-500/20 shadow-[0_0_40px_rgba(99,102,241,0.15)] bg-dark-900/60 backdrop-blur-md overflow-hidden relative"
               >
-                {/* Editor chrome */}
-                <div className="flex items-center gap-1.5 mb-4">
-                  <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                  <span className="ml-auto font-mono text-xs text-slate-600">App.java</span>
+                {/* Holographic scanning line effect */}
+                <motion.div 
+                  className="absolute left-0 right-0 h-1 bg-primary-500/30 blur-sm z-0"
+                  animate={{ top: ['0%', '100%', '0%'] }}
+                  transition={{ duration: 3, ease: 'linear', repeat: Infinity }}
+                />
+
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6 relative z-10 border-b border-white/5 pb-2">
+                  <div className="flex items-center gap-2 text-xs font-mono text-primary-400">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    SYSTEM.METRICS
+                  </div>
+                  <span className="text-[10px] text-slate-500 font-mono">LIVE_NODE_01</span>
                 </div>
-                <pre className="font-mono text-xs leading-6 text-left overflow-hidden">
-                  <code>
-                    <span className="text-violet-400">@RestController</span>{'\n'}
-                    <span className="text-sky-400">public class</span>{' '}
-                    <span className="text-emerald-300">ArchitController</span>{' {'}{'\n'}
-                    {'\n'}
-                    {'  '}<span className="text-violet-400">@GetMapping</span>
-                    <span className="text-slate-500">("/skills")</span>{'\n'}
-                    {'  '}<span className="text-sky-400">public</span>{' '}
-                    <span className="text-amber-300">List</span>
-                    <span className="text-slate-400">{'<String>'}</span>{' '}
-                    <span className="text-emerald-400">getSkills</span>
-                    <span className="text-slate-400">() {'{'}</span>{'\n'}
-                    {'    '}<span className="text-sky-400">return</span>{' '}
-                    <span className="text-slate-300">List.of(</span>{'\n'}
-                    {'      '}<span className="text-amber-300">"React.js"</span>
-                    <span className="text-slate-500">,</span>{'\n'}
-                    {'      '}<span className="text-amber-300">"Spring Boot"</span>
-                    <span className="text-slate-500">,</span>{'\n'}
-                    {'      '}<span className="text-amber-300">"PostgreSQL"</span>{'\n'}
-                    {'    '}<span className="text-slate-300">);</span>{'\n'}
-                    {'  '}<span className="text-slate-400">{'}'}</span>{'\n'}
-                    <span className="text-slate-400">{'}'}</span>
-                  </code>
-                </pre>
+
+                {/* Network Graph Simulation */}
+                <div className="space-y-4 relative z-10">
+                  <div className="flex justify-between items-end">
+                    <div className="space-y-1">
+                      <div className="text-[10px] text-slate-500 uppercase tracking-widest">KAFKA CLUSTER</div>
+                      <div className="text-xl font-bold text-white font-mono">24.5k<span className="text-xs text-primary-400 ml-1">msg/s</span></div>
+                    </div>
+                    {/* Simulated Mini Chart */}
+                    <div className="flex items-end gap-1 h-8 opacity-70">
+                      {[40, 70, 45, 90, 60, 80, 50].map((h, i) => (
+                        <motion.div
+                          key={i}
+                          className="w-1.5 bg-primary-500 rounded-t-sm"
+                          animate={{ height: [`${h}%`, `${h - (Math.random() * 20 - 10)}%`, `${h}%`] }}
+                          transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-2" />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <div className="text-[10px] text-slate-500 uppercase">API LATENCY</div>
+                      <div className="text-lg font-bold text-emerald-400 font-mono">12ms</div>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="text-[10px] text-slate-500 uppercase">CACHE HIT</div>
+                      <div className="text-lg font-bold text-cyan-400 font-mono">98.2%</div>
+                    </div>
+                  </div>
+                  
+                  <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-2" />
+                  
+                  {/* Fake console log */}
+                  <div className="font-mono text-[9px] leading-tight text-slate-500 h-10 overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-900/60 z-10 pointer-events-none"/>
+                    <motion.div animate={{ y: [0, -20] }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}>
+                      <p className="text-emerald-500/70">[OK] Shard 03 rebalanced</p>
+                      <p>[INFO] TCP connection established</p>
+                      <p>[INFO] WS stream active</p>
+                      <p className="text-primary-500/70">[SYNC] Redis sync complete</p>
+                      <p>[INFO] Heartbeat acknowledged</p>
+                    </motion.div>
+                  </div>
+                </div>
               </motion.div>
 
-              {/* Tech badges orbiting */}
+              {/* Orbiting Tech Nodes */}
               {techOrbit.map(({ Icon, color, label }, i) => {
                 const angle = (i / techOrbit.length) * 360 - 90;
                 const rad = (angle * Math.PI) / 180;
-                const radius = 145;
+                const radius = 175;
                 const cx = Math.cos(rad) * radius;
                 const cy = Math.sin(rad) * radius;
                 return (
                   <motion.div
                     key={label}
-                    className="absolute flex flex-col items-center gap-1"
-                    style={{
-                      left: '50%',
-                      top: '50%',
-                    }}
+                    className="absolute flex flex-col items-center gap-1 z-20"
+                    style={{ left: '50%', top: '50%' }}
                     animate={{
-                      x: [cx, cx + 4, cx],
+                      x: [cx, cx + 5, cx],
                       y: [cy, cy - 5, cy],
                     }}
                     transition={{
-                      duration: 3 + i * 0.5,
+                      duration: 4 + i * 0.5,
                       repeat: Infinity,
                       ease: 'easeInOut',
                       delay: i * 0.3,
                     }}
                   >
                     <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center bg-dark-800/90 border border-white/10 shadow-lg backdrop-blur-sm"
+                      className="w-10 h-10 rounded-full flex items-center justify-center bg-dark-900/80 border border-primary-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)] backdrop-blur-md relative overflow-hidden group"
                       style={{ transform: 'translate(-50%, -50%)' }}
                     >
+                      <div className="absolute inset-0 bg-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                       <Icon size={18} color={color} />
                     </div>
                   </motion.div>

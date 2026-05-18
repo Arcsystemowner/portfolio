@@ -1,71 +1,64 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { FiGithub, FiExternalLink, FiArrowRight } from "react-icons/fi";
-import SectionHeader from "../components/SectionHeader";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiGithub, FiExternalLink, FiArrowRight, FiZap, FiShield, FiActivity, FiLayers } from "react-icons/fi";
 import ProjectDetailModal from "../components/ProjectDetailModal";
 import { projects } from "../data/projects";
 
-const filters = ["All", "React", "Full Stack"];
+// ─── filter config ────────────────────────────────────────────────────────────
+const FILTERS = ["All", "Featured", "React", "Full Stack"];
 
-function getFilter(project) {
+function getTagsForProject(project) {
   const stack = project.techStack.join(" ").toLowerCase();
   const tags = [];
+  if (project.featured) tags.push("Featured");
   if (stack.includes("react")) tags.push("React");
-  if (
-    stack.includes("java") ||
-    stack.includes("spring") ||
-    stack.includes("node")
-  )
-    tags.push("Full Stack");
+  if (stack.includes("spring") || stack.includes("java") || stack.includes("node")) tags.push("Full Stack");
   return tags;
 }
 
+// ─── accent icon per project ──────────────────────────────────────────────────
+const PROJECT_ICONS = {
+  "sre-monitoring":       FiActivity,
+  "asset-management":     FiLayers,
+  "db-activity-monitoring": FiShield,
+  "task-tracker":         FiZap,
+};
+
+// ─── main section ─────────────────────────────────────────────────────────────
 export default function Projects() {
-  const [active, setActive] = useState("All");
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [hoveredCard, setHoveredCard] = useState(null);
+  const [active, setActive]         = useState("All");
+  const [selected, setSelected]     = useState(null);
+  const [hovered, setHovered]       = useState(null);
 
-  const filtered =
-    active === "All"
-      ? projects
-      : projects.filter((p) => getFilter(p).includes(active));
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const filterVariants = {
-    initial: { opacity: 0, y: -10 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -10 },
-    transition: { duration: 0.2 },
-  };
+  const filtered = active === "All"
+    ? projects
+    : projects.filter(p => getTagsForProject(p).includes(active));
 
   return (
     <section id="projects" className="relative overflow-hidden">
       <div className="section-container">
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
         >
-          <SectionHeader
-            number="03"
-            label="Projects"
-            title="Featured Projects"
-            subtitle="Production-grade projects built with performance and scalability in mind."
-          />
+          <div className="mb-10">
+            <div className="flex items-center gap-3 mb-3">
+              <span className="font-mono text-primary-400 text-sm tracking-widest">03</span>
+              <span className="h-px w-8 bg-primary-500/40" />
+              <span className="font-mono text-xs text-slate-500 tracking-widest uppercase">Projects</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">Featured Projects</h2>
+            <p className="text-slate-400 max-w-xl">
+              Production systems built at KFin Technologies — enterprise-scale platforms serving real teams and infrastructure.
+            </p>
+          </div>
         </motion.div>
 
-        {/* Filter tabs with smooth transitions */}
+        {/* Filters */}
         <motion.div
           className="flex flex-wrap gap-2 mb-10"
           initial={{ opacity: 0 }}
@@ -73,61 +66,62 @@ export default function Projects() {
           viewport={{ once: true }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          {filters.map((f) => (
+          {FILTERS.map(f => (
             <motion.button
               key={f}
               onClick={() => setActive(f)}
-              whileHover={{
-                scale: 1.08,
-                boxShadow:
-                  active === f
-                    ? "0 0 20px rgba(99, 102, 241, 0.4)"
-                    : "0 0 10px rgba(99, 102, 241, 0.2)",
-              }}
+              whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400 }}
-              id={`projects-filter-${f.toLowerCase().replace(" ", "-")}`}
               className={`px-5 py-1.5 rounded-full text-sm font-medium border transition-all duration-300 ${
                 active === f
-                  ? "bg-primary-500/20 border-primary-500/60 text-primary-300 shadow-lg"
+                  ? "bg-primary-500/20 border-primary-500/60 text-primary-300 shadow-lg shadow-primary-500/10"
                   : "border-white/10 text-slate-500 hover:border-white/30 hover:text-slate-300"
               }`}
             >
               {f}
             </motion.button>
           ))}
+
+          {/* live count */}
+          <span className="ml-auto self-center text-xs font-mono text-slate-600">
+            {filtered.length} project{filtered.length !== 1 ? "s" : ""}
+          </span>
         </motion.div>
 
-        {/* Grid with enhanced animations */}
+        {/* Grid */}
         <motion.div
           layout
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
+          className="grid md:grid-cols-2 gap-6"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
+          transition={{ staggerChildren: 0.08 }}
         >
-          {filtered.map((project, i) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={i}
-              onViewDetails={() => setSelectedProject(project)}
-              isHovered={hoveredCard === project.id}
-              onHover={(id) => setHoveredCard(id)}
-              onUnhover={() => setHoveredCard(null)}
-            />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {filtered.map((project, i) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                index={i}
+                isHovered={hovered === project.id}
+                onHover={() => setHovered(project.id)}
+                onUnhover={() => setHovered(null)}
+                onViewDetails={() => setSelected(project)}
+              />
+            ))}
+          </AnimatePresence>
         </motion.div>
 
         {/* Modal */}
         <ProjectDetailModal
-          project={selectedProject}
-          isOpen={!!selectedProject}
-          onClose={() => setSelectedProject(null)}
+          project={selected}
+          isOpen={!!selected}
+          onClose={() => setSelected(null)}
         />
 
-        <motion.div
+        {/* GitHub CTA */}
+        {/* <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -137,281 +131,176 @@ export default function Projects() {
             href="https://github.com/Arcsystemowner"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-outline inline-block"
-            id="projects-github-all"
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "0 0 20px rgba(99, 102, 241, 0.3)",
-            }}
+            className="btn-outline inline-flex items-center gap-2"
+            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(99,102,241,0.3)" }}
             whileTap={{ scale: 0.95 }}
           >
+            <FiGithub size={16} />
             View All on GitHub
           </motion.a>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );
 }
 
-function ProjectCard({
-  project,
-  index,
-  onViewDetails,
-  isHovered,
-  onHover,
-  onUnhover,
-}) {
-  const {
-    title,
-    description,
-    techStack,
-    metrics,
-    github,
-    demo,
-    color,
-    featured,
-  } = project;
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.4,
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      },
-    },
-    exit: { opacity: 0, scale: 0.9 },
-  };
+// ─── project card ─────────────────────────────────────────────────────────────
+function ProjectCard({ project, index, isHovered, onHover, onUnhover, onViewDetails }) {
+  const { title, description, techStack, metrics, github, demo, color, accentColor, featured, id } = project;
+  const Icon = PROJECT_ICONS[id] || FiActivity;
 
   return (
     <motion.article
       layout
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      drag
-      dragElastic={0.2}
-      dragTransition={{ power: 0.3, restDamping: 0.8 }}
-      onHoverStart={() => onHover(project.id)}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.4, delay: index * 0.07, type: "spring", stiffness: 280, damping: 28 }}
+      onHoverStart={onHover}
       onHoverEnd={onUnhover}
-      whileHover={{
-        y: -12,
-        boxShadow: "0 20px 40px rgba(99, 102, 241, 0.3)",
-      }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="group relative card p-6 flex flex-col gap-5 overflow-hidden cursor-grab active:cursor-grabbing"
+      whileHover={{ y: -6, boxShadow: `0 24px 48px ${accentColor}25` }}
+      className="group relative card p-0 flex flex-col overflow-hidden cursor-pointer"
       onClick={onViewDetails}
+      style={{ borderColor: isHovered ? `${accentColor}40` : undefined, transition: "border-color 0.3s" }}
     >
-      {/* Animated background glow */}
-      <motion.div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"
-        style={{
-          boxShadow: "inset 0 0 60px rgba(99, 102, 241, 0.08)",
-        }}
-        animate={{
-          boxShadow: isHovered
-            ? "inset 0 0 80px rgba(99, 102, 241, 0.15)"
-            : "inset 0 0 60px rgba(99, 102, 241, 0.08)",
-        }}
-      />
-
-      {/* Shimmer effect on hover */}
+      {/* Shimmer on hover */}
       {isHovered && (
         <motion.div
-          className="absolute inset-0 opacity-0 pointer-events-none rounded-2xl"
-          animate={{
-            opacity: [0, 0.3, 0],
-            x: ["-100%", "100%"],
-          }}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)",
-          }}
+          className="absolute inset-0 pointer-events-none z-10"
+          animate={{ x: ["-100%", "160%"] }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent)" }}
         />
       )}
 
-      {/* Featured badge with animation */}
-      {featured && (
-        <motion.span
-          className="absolute top-4 right-4 text-[10px] px-2 py-0.5 rounded-full bg-primary-500/20 border border-primary-500/40 text-primary-300 font-mono tracking-wider"
-          animate={{
-            scale: isHovered ? [1, 1.1, 1] : 1,
-            boxShadow: isHovered ? "0 0 15px rgba(99, 102, 241, 0.5)" : "none",
-          }}
-          transition={{ duration: 0.5 }}
-        >
-          Featured
-        </motion.span>
-      )}
+      {/* Top colour strip */}
+      <div className={`h-1 w-full bg-gradient-to-r ${color} opacity-80`} />
 
-      {/* Color block + links */}
-      <div className="flex items-start justify-between gap-4">
-        <motion.div
-          className={`w-11 h-11 rounded-xl bg-gradient-to-br ${color} opacity-90`}
-          whileHover={{
-            scale: 1.15,
-            rotate: 8,
-            boxShadow: `0 10px 30px rgba(99, 102, 241, 0.3)`,
-          }}
-          transition={{ type: "spring", stiffness: 400 }}
-        />
-        <motion.div
-          className="flex items-center gap-2 mt-1"
-          animate={{
-            opacity: isHovered ? 1 : 0.7,
-          }}
-        >
-          {github && (
-            <motion.a
-              href={github}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
-              whileHover={{
-                scale: 1.2,
-                rotate: 10,
-                background: "rgba(99, 102, 241, 0.2)",
-              }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="GitHub"
+      {/* Card body */}
+      <div className="p-6 flex flex-col gap-5 flex-1">
+
+        {/* Header row */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {/* Icon badge */}
+            <motion.div
+              className={`w-11 h-11 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center opacity-90 shrink-0`}
+              whileHover={{ scale: 1.12, rotate: 6 }}
+              transition={{ type: "spring", stiffness: 400 }}
             >
-              <FiGithub size={15} />
-            </motion.a>
-          )}
-          {demo && (
-            <motion.a
-              href={demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
-              whileHover={{
-                scale: 1.2,
-                rotate: -10,
-                background: "rgba(99, 102, 241, 0.2)",
+              <Icon size={20} className="text-white" />
+            </motion.div>
+            <div>
+              <h3 className="text-base font-bold text-white group-hover:text-primary-300 transition-colors leading-tight">
+                {title}
+              </h3>
+              {featured && (
+                <span
+                  className="inline-block mt-1 text-[9px] px-2 py-0.5 rounded-full border font-mono tracking-wider"
+                  style={{ color: accentColor, borderColor: `${accentColor}50`, background: `${accentColor}12` }}
+                >
+                  FEATURED
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Links */}
+          <div className="flex items-center gap-1.5 shrink-0 mt-1">
+            {/* {github && (
+              <motion.a
+                href={github} target="_blank" rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+                whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} aria-label="GitHub"
+              >
+                <FiGithub size={14} />
+              </motion.a>
+            )} */}
+            {demo && (
+              <motion.a
+                href={demo} target="_blank" rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all"
+                whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} aria-label="Live Demo"
+              >
+                <FiExternalLink size={14} />
+              </motion.a>
+            )}
+          </div>
+        </div>
+
+        {/* Description */}
+        <p className="text-slate-400 text-sm leading-relaxed line-clamp-2">{description}</p>
+
+        {/* Metrics — 2×2 grid with accent dots */}
+        <div className="grid grid-cols-2 gap-2">
+          {metrics.map((m, i) => (
+            <motion.div
+              key={m}
+              className="flex items-start gap-2 rounded-lg px-3 py-2.5 border transition-colors"
+              style={{
+                background: isHovered ? `${accentColor}0a` : "rgba(255,255,255,0.02)",
+                borderColor: isHovered ? `${accentColor}25` : "rgba(255,255,255,0.05)",
+                transition: "background 0.3s, border-color 0.3s",
               }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Live Demo"
+              whileHover={{ scale: 1.03 }}
+              transition={{ delay: i * 0.04 }}
             >
-              <FiExternalLink size={15} />
-            </motion.a>
-          )}
-        </motion.div>
-      </div>
+              <span
+                className="w-1.5 h-1.5 rounded-full shrink-0 mt-1"
+                style={{ background: accentColor, boxShadow: `0 0 5px ${accentColor}` }}
+              />
+              <span className="text-xs text-slate-300 leading-tight">{m}</span>
+            </motion.div>
+          ))}
+        </div>
 
-      {/* Title and description */}
-      <motion.div
-        animate={{
-          color: isHovered ? "rgb(196, 181, 253)" : "rgb(255, 255, 255)",
-        }}
-      >
-        <h3 className="text-base font-bold group-hover:text-primary-300 transition-colors mb-2">
-          {title}
-        </h3>
-        <motion.p
-          className="text-slate-400 text-sm leading-relaxed line-clamp-3"
-          animate={{
-            color: isHovered ? "rgb(148, 163, 184)" : "rgb(100, 116, 139)",
-          }}
-        >
-          {description}
-        </motion.p>
-      </motion.div>
-
-      {/* Metrics with hover animation */}
-      <motion.div
-        className="grid grid-cols-2 gap-2"
-        animate={{ opacity: isHovered ? 1 : 0.8 }}
-      >
-        {metrics.map((m, i) => (
-          <motion.div
-            key={m}
-            className="flex items-center gap-2 bg-white/3 rounded-lg px-3 py-2 hover:bg-white/5 transition-colors"
-            whileHover={{
-              scale: 1.05,
-              background: "rgba(255, 255, 255, 0.08)",
-            }}
-            transition={{ delay: i * 0.05 }}
-          >
+        {/* Tech stack */}
+        <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5 mt-auto">
+          {techStack.slice(0, 5).map(tech => (
             <motion.span
-              className="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0"
-              animate={{
-                scale: isHovered ? [1, 1.5, 1] : 1,
+              key={tech}
+              className="text-xs px-2.5 py-1 rounded-md font-mono border transition-colors"
+              style={{
+                background: `${accentColor}10`,
+                color: accentColor,
+                borderColor: `${accentColor}30`,
               }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-              }}
-            />
-            <span className="text-xs text-slate-300 truncate">{m}</span>
-          </motion.div>
-        ))}
-      </motion.div>
+              whileHover={{ scale: 1.08, background: `${accentColor}20` }}
+              transition={{ type: "spring", stiffness: 400 }}
+            >
+              {tech}
+            </motion.span>
+          ))}
+          {techStack.length > 5 && (
+            <span className="text-xs px-2 py-1 text-slate-500 font-mono">+{techStack.length - 5}</span>
+          )}
+        </div>
 
-      {/* Tech stack */}
-      <motion.div
-        className="flex flex-wrap gap-1.5 mt-auto pt-3 border-t border-white/5"
-        animate={{ opacity: isHovered ? 1 : 0.7 }}
-      >
-        {techStack.slice(0, 5).map((tech, i) => (
-          <motion.span
-            key={tech}
-            className="text-xs px-2.5 py-1 rounded-md bg-primary-500/10 text-primary-300 border border-primary-500/20 font-mono"
-            whileHover={{
-              scale: 1.1,
-              background: "rgba(99, 102, 241, 0.2)",
-              borderColor: "rgba(99, 102, 241, 0.5)",
-            }}
-            transition={{ type: "spring", stiffness: 400 }}
-          >
-            {tech}
-          </motion.span>
-        ))}
-        {techStack.length > 5 && (
-          <span className="text-xs px-2 py-1 rounded-md text-slate-500 font-mono">
-            +{techStack.length - 5}
-          </span>
-        )}
-      </motion.div>
-
-      {/* View Details Button with enhanced animation */}
-      <motion.button
-        onClick={onViewDetails}
-        className="w-full mt-4 px-4 py-2.5 rounded-lg bg-primary-500/10 hover:bg-primary-500/20 border border-primary-500/30 text-primary-300 font-medium flex items-center justify-center gap-2 transition-all group/btn"
-        whileHover={{
-          scale: 1.05,
-          background: "rgba(99, 102, 241, 0.2)",
-          boxShadow: "0 0 20px rgba(99, 102, 241, 0.3)",
-        }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 400 }}
-      >
-        View Details
-        <motion.span
-          className="group-hover/btn:translate-x-1 transition-transform inline-block"
-          animate={{
-            x: isHovered ? [0, 4, 0] : 0,
+        {/* View details CTA */}
+        <motion.button
+          onClick={onViewDetails}
+          className="w-full mt-1 px-4 py-2.5 rounded-lg border font-medium flex items-center justify-center gap-2 transition-all text-sm"
+          style={{
+            background: isHovered ? `${accentColor}18` : `${accentColor}0c`,
+            borderColor: isHovered ? `${accentColor}60` : `${accentColor}30`,
+            color: accentColor,
+            transition: "background 0.3s, border-color 0.3s",
           }}
-          transition={{
-            duration: 0.6,
-            repeat: Infinity,
-          }}
+          whileHover={{ scale: 1.03, boxShadow: `0 0 20px ${accentColor}30` }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ type: "spring", stiffness: 400 }}
         >
-          <FiArrowRight size={16} />
-        </motion.span>
-      </motion.button>
+          View Details
+          <motion.span
+            animate={{ x: isHovered ? [0, 4, 0] : 0 }}
+            transition={{ duration: 0.7, repeat: Infinity }}
+          >
+            <FiArrowRight size={15} />
+          </motion.span>
+        </motion.button>
+      </div>
     </motion.article>
   );
 }
