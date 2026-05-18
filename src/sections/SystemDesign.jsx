@@ -281,18 +281,19 @@ export default function SystemDesign() {
   };
 
   return (
-    <div style={{
-      position: "relative", width: "80%", height: 580,
-      background: "linear-gradient(135deg, #060910 0%, #0a0d16 60%, #06090f 100%)",
-      borderRadius: 20,
-      border: "1px solid rgba(255,255,255,0.05)",
-      overflow: "hidden",
-      fontFamily: "monospace",
-      userSelect: "none",
-      alignItems:"center",
-      justifyContent:"center",
-      margin:"auto"
-    }}>
+    <div className="w-full overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div style={{
+        position: "relative", width: "80%", minWidth: 800, height: 580,
+        background: "linear-gradient(135deg, #060910 0%, #0a0d16 60%, #06090f 100%)",
+        borderRadius: 20,
+        border: "1px solid rgba(255,255,255,0.05)",
+        overflow: "hidden",
+        fontFamily: "monospace",
+        userSelect: "none",
+        alignItems:"center",
+        justifyContent:"center",
+        margin:"auto"
+      }}>
       <style>{`
         @keyframes ping-ring { 0%{transform:scale(1);opacity:0.6} 100%{transform:scale(1.25);opacity:0} }
         @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
@@ -447,6 +448,7 @@ export default function SystemDesign() {
             borderRadius: 4, padding: "2px 7px", textTransform: "uppercase",
           }}>{tier}</div>
         ))}
+      </div>
       </div>
     </div>
   );

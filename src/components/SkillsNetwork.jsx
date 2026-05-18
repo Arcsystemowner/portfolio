@@ -80,26 +80,28 @@ export default function SkillsNetwork() {
   };
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        position: "relative",
-        width: "100%",
-        aspectRatio: "16/9",
-        maxHeight: 680,
-        background: "linear-gradient(135deg, #0a0d14 0%, #0d1117 50%, #0a0f18 100%)",
-        borderRadius: 20,
-        border: "1px solid rgba(255,255,255,0.06)",
-        overflow: "hidden",
-        fontFamily: "monospace",
-        userSelect: "none",
-      }}
-      onClick={(e) => {
-        if (e.target === containerRef.current || e.target.tagName === "svg") {
-          setSelected(null);
-        }
-      }}
-    >
+    <div className="w-full overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div
+        ref={containerRef}
+        style={{
+          position: "relative",
+          width: "100%",
+          minWidth: 800,
+          aspectRatio: "16/9",
+          maxHeight: 680,
+          background: "linear-gradient(135deg, #0a0d14 0%, #0d1117 50%, #0a0f18 100%)",
+          borderRadius: 20,
+          border: "1px solid rgba(255,255,255,0.06)",
+          overflow: "hidden",
+          fontFamily: "monospace",
+          userSelect: "none",
+        }}
+        onClick={(e) => {
+          if (e.target === containerRef.current || e.target.tagName === "svg") {
+            setSelected(null);
+          }
+        }}
+      >
       {/* Ambient background orbs */}
       <div style={{
         position: "absolute", top: "10%", left: "20%",
@@ -435,6 +437,7 @@ export default function SkillsNetwork() {
           50% { opacity: 0.4; }
         }
       `}</style>
+      </div>
     </div>
   );
 }
