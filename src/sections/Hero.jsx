@@ -55,8 +55,8 @@ export default function Hero() {
         />
       </div>
 
-      <div className="section-container relative z-10 w-full">
-        <div className="grid lg:grid-cols-[1fr_auto] gap-12 items-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-10 pb-16 lg:py-24 mt-10">
+        <div className="grid lg:grid-cols-[1fr_auto] gap-8 lg:gap-12 items-center">
           {/* Left — main content */}
           <motion.div
             variants={container}
@@ -95,7 +95,7 @@ export default function Hero() {
             {/* Role with typing */}
             <motion.div
               variants={item}
-              className="text-xl sm:text-2xl font-semibold text-slate-300 mb-6 h-9 flex items-center gap-2"
+              className="text-lg sm:text-2xl font-semibold text-slate-300 mb-5 sm:mb-6 min-h-[32px] sm:min-h-[36px] flex items-center gap-2"
             >
               <span className="text-slate-500">/</span>
               <TypingAnimation />
