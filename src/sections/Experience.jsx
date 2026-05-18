@@ -1,94 +1,174 @@
-import { motion } from 'framer-motion';
-import { FiBriefcase, FiMapPin, FiCalendar } from 'react-icons/fi';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, animate } from 'framer-motion';
+import { FiCalendar, FiMapPin, FiChevronRight, FiActivity, FiServer } from 'react-icons/fi';
+import SectionHeader from '../components/SectionHeader';
 import { experience } from '../data/experience';
 
-export default function Experience() {
-  const exp = experience[0];
+// Animated Counter Component
+function AnimatedCounter({ from, to, suffix, text }) {
+  const nodeRef = useRef(null);
+
+  useEffect(() => {
+    const node = nodeRef.current;
+    if (!node) return;
+    
+    // Intersection Observer to trigger when in view
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        const controls = animate(from, to, {
+          duration: 2,
+          ease: "easeOut",
+          onUpdate(value) {
+            node.textContent = Math.round(value) + suffix;
+          }
+        });
+        return () => controls.stop();
+      }
+    }, { threshold: 0.5 });
+    
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [from, to, suffix]);
+
   return (
-    <section id="experience" className="relative">
+    <div className="flex flex-col items-center bg-dark-900/60 border border-white/5 rounded-xl p-3 backdrop-blur-sm">
+      <span ref={nodeRef} className="text-2xl font-bold font-mono text-emerald-400">
+        {from}{suffix}
+      </span>
+      <span className="text-[10px] uppercase tracking-wider text-slate-500 mt-1 text-center">{text}</span>
+    </div>
+  );
+}
+
+export default function Experience() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"]
+  });
+
+  // Line progress
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  const [expandedId, setExpandedId] = useState(experience[0].id);
+
+  return (
+    <section id="experience" className="relative py-24" ref={containerRef}>
       <div className="section-container">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-14"
-        >
-          <p className="text-primary-400 font-mono text-sm tracking-widest mb-2">04. EXPERIENCE</p>
-          <h2 className="section-title">Work Experience</h2>
-          <div className="w-12 h-1 bg-gradient-to-r from-primary-500 to-violet-500 rounded-full" />
-        </motion.div>
+        <SectionHeader 
+          number="03" 
+          label="Experience" 
+          title="Career Timeline" 
+          subtitle="My professional journey engineering scalable platforms and high-throughput systems." 
+        />
 
-        <div className="relative max-w-3xl">
-          {/* Timeline line */}
-          <div className="absolute left-5 top-8 bottom-0 w-px bg-gradient-to-b from-primary-500 to-transparent hidden sm:block" />
+        <div className="relative max-w-4xl mx-auto mt-16">
+          {/* Main animated vertical line */}
+          <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-dark-800 -translate-x-1/2">
+            <motion.div 
+              className="absolute top-0 left-0 right-0 w-full bg-gradient-to-b from-primary-500 via-cyan-400 to-emerald-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]"
+              style={{ height: lineHeight }}
+            />
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="sm:pl-16 relative"
-          >
-            {/* Timeline dot */}
-            <div className="absolute left-3.5 top-8 w-3 h-3 rounded-full bg-primary-500 border-2 border-dark-900 shadow-lg shadow-primary-500/50 hidden sm:block" />
+          <div className="space-y-24">
+            {experience.map((exp, i) => {
+              const isEven = i % 2 === 0;
+              const isExpanded = expandedId === exp.id;
+              
+              return (
+                <motion.div
+                  key={exp.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-100px' }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                  className={`relative flex flex-col md:flex-row items-center ${isEven ? 'md:flex-row-reverse' : ''}`}
+                >
+                  {/* Timeline Node center dot */}
+                  <div className="absolute left-6 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-dark-900 border-2 border-primary-500 z-10 flex items-center justify-center">
+                    <motion.div 
+                      className="w-3 h-3 rounded-full bg-cyan-400"
+                      animate={{ scale: isExpanded ? [1, 1.5, 1] : 1 }}
+                      transition={{ repeat: Infinity, duration: 2 }}
+                    />
+                  </div>
 
-            <div className="card p-7">
-              {/* Header */}
-              <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
-                <div>
-                  <h3 className="text-xl font-bold text-white">{exp.role}</h3>
-                  <p className="text-primary-400 font-semibold mt-0.5">{exp.company}</p>
-                </div>
-                <span className="px-3 py-1 text-xs rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
-                  {exp.type}
-                </span>
-              </div>
+                  {/* Empty space for alternating layout */}
+                  <div className="hidden md:block md:w-1/2" />
 
-              {/* Meta */}
-              <div className="flex flex-wrap gap-4 mb-6 text-sm text-slate-500">
-                <span className="flex items-center gap-1.5">
-                  <FiCalendar size={13} />
-                  {exp.period}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <FiMapPin size={13} />
-                  {exp.location}
-                </span>
-              </div>
+                  {/* Card Content */}
+                  <div className={`w-full pl-16 md:pl-0 md:w-1/2 ${isEven ? 'md:pr-12' : 'md:pl-12'}`}>
+                    <motion.div 
+                      layout
+                      onClick={() => setExpandedId(isExpanded ? null : exp.id)}
+                      className="cursor-pointer group glass bg-dark-800/40 hover:bg-dark-800/60 border-white/5 rounded-2xl p-6 transition-all duration-300"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="text-xl font-bold text-white group-hover:text-primary-300 transition-colors">{exp.role}</h3>
+                          <div className="text-primary-500 font-mono text-sm tracking-wide mt-1">{exp.company}</div>
+                        </div>
+                        <span className="text-slate-500 text-xs font-mono px-2 py-1 bg-white/5 rounded border border-white/5 uppercase">
+                          {exp.type}
+                        </span>
+                      </div>
 
-              <p className="text-slate-400 leading-relaxed mb-6">{exp.description}</p>
+                      <div className="flex flex-wrap gap-4 text-xs font-mono text-slate-400 mb-4">
+                        <span className="flex items-center gap-1.5"><FiCalendar /> {exp.period}</span>
+                        <span className="flex items-center gap-1.5"><FiMapPin /> {exp.location}</span>
+                      </div>
 
-              {/* Responsibilities */}
-              <ul className="space-y-3">
-                {exp.responsibilities.map((r, i) => (
-                  <motion.li
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: i * 0.07 }}
-                    className="flex gap-3 text-sm text-slate-400"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0 mt-1.5" />
-                    {r}
-                  </motion.li>
-                ))}
-              </ul>
+                      <p className="text-sm text-slate-300 leading-relaxed mb-4">{exp.description}</p>
+                      
+                      {/* Interactive Expanding Area */}
+                      <motion.div
+                        initial={false}
+                        animate={{ height: isExpanded ? 'auto' : 0, opacity: isExpanded ? 1 : 0 }}
+                        className="overflow-hidden"
+                      >
+                        {/* Dynamic Metrics if Full-time */}
+                        {exp.type === 'Full-time' && (
+                          <div className="grid grid-cols-2 gap-3 mb-6 mt-4">
+                            <AnimatedCounter from={0} to={100} suffix="k+" text="Services Monitored" />
+                            <AnimatedCounter from={22} to={3} suffix="m" text="MTTD Reduced To" />
+                          </div>
+                        )}
 
-              {/* Tech stack */}
-              <div className="flex flex-wrap gap-2 mt-6 pt-5 border-t border-white/5">
-                {exp.techStack.map((t) => (
-                  <span
-                    key={t}
-                    className="text-xs px-2.5 py-1 rounded-md bg-primary-500/10 text-primary-300 border border-primary-500/20 font-mono"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+                        <div className="space-y-3 mb-6">
+                          <h4 className="text-xs uppercase tracking-widest text-slate-500 font-bold mb-2 flex items-center gap-2">
+                            <FiServer size={12} /> Key Architecture Contributions
+                          </h4>
+                          {exp.responsibilities.map((r, idx) => (
+                            <div key={idx} className="flex gap-3 text-sm text-slate-400">
+                              <FiChevronRight className="text-primary-500 shrink-0 mt-0.5" />
+                              <span>{r}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 pt-4 border-t border-white/5">
+                          {exp.techStack.map(t => (
+                            <span key={t} className="px-2 py-1 text-[10px] rounded font-mono uppercase bg-dark-900 border border-white/10 text-primary-300">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
+
+                      {/* Expand Toggle */}
+                      <div className="mt-4 flex items-center gap-2 text-xs font-mono text-primary-500 uppercase tracking-widest">
+                        <span>{isExpanded ? 'Collapse' : 'Expand Metrics & Details'}</span>
+                        <motion.div animate={{ rotate: isExpanded ? 180 : 0 }}>
+                          <FiChevronRight />
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

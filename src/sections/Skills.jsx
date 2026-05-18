@@ -1,97 +1,48 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaJava,
-  FaGithub, FaDatabase,
+  FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaJava, FaDatabase, FaDocker,
 } from 'react-icons/fa';
 import {
-  SiJavascript, SiTailwindcss, SiExpress, SiMysql,
-  SiPostgresql, SiSpringboot,
+  SiJavascript, SiTailwindcss, SiSpringboot, SiPostgresql, SiMongodb,
+  SiRedis, SiTypescript,
 } from 'react-icons/si';
-import { FiZap, FiLayout, FiShield, FiCloud } from 'react-icons/fi';
-import { skills } from '../data/skills';
+import { FiZap, FiLayout, FiShield, FiCloud, FiGitBranch, FiActivity } from 'react-icons/fi';
+import SectionHeader from '../components/SectionHeader';
+import SkillsNetwork from '../components/SkillsNetwork';
 
-const iconMap = {
-  react: <FaReact className="text-cyan-400" size={28} />,
-  js: <SiJavascript className="text-yellow-400" size={24} />,
-  html: <FaHtml5 className="text-orange-500" size={26} />,
-  css: <FaCss3Alt className="text-blue-400" size={26} />,
-  tailwind: <SiTailwindcss className="text-teal-400" size={26} />,
-  node: <FaNodeJs className="text-green-500" size={26} />,
-  express: <SiExpress className="text-slate-300" size={22} />,
-  spring: <SiSpringboot className="text-green-400" size={24} />,
-  mysql: <SiMysql className="text-blue-500" size={28} />,
-  postgres: <SiPostgresql className="text-indigo-400" size={26} />,
-  perf: <FiZap className="text-yellow-400" size={22} />,
-  system: <FiLayout className="text-violet-400" size={22} />,
-  api: <FiCloud className="text-sky-400" size={22} />,
-  security: <FiShield className="text-emerald-400" size={22} />,
-};
+const categories = ['All', 'Frontend', 'Backend', 'Database', 'Concepts'];
 
-const categoryColors = {
-  Frontend: 'from-cyan-500/10 to-blue-500/10 border-cyan-500/20',
-  Backend: 'from-green-500/10 to-emerald-500/10 border-green-500/20',
-  Database: 'from-indigo-500/10 to-violet-500/10 border-indigo-500/20',
-  Concepts: 'from-yellow-500/10 to-orange-500/10 border-yellow-500/20',
-};
-
-const categoryAccent = {
-  Frontend: 'bg-cyan-500',
-  Backend: 'bg-green-500',
-  Database: 'bg-indigo-500',
-  Concepts: 'bg-yellow-500',
-};
+const allSkills = [
+  { name: 'React.js', level: 95, icon: <FaReact className="text-cyan-400" size={26} />, category: 'Frontend', color: 'from-cyan-500/20 to-blue-500/20', border: 'border-cyan-500/30' },
+  { name: 'TypeScript', level: 80, icon: <SiTypescript className="text-blue-400" size={22} />, category: 'Frontend', color: 'from-blue-500/15 to-indigo-500/15', border: 'border-blue-500/25' },
+  { name: 'Tailwind CSS', level: 94, icon: <SiTailwindcss className="text-teal-400" size={22} />, category: 'Frontend', color: 'from-teal-500/15 to-cyan-500/15', border: 'border-teal-500/25' },
+  { name: 'Java', level: 92, icon: <FaJava className="text-orange-400" size={26} />, category: 'Backend', color: 'from-orange-400/20 to-red-500/20', border: 'border-orange-400/30' },
+  { name: 'Spring Boot', level: 90, icon: <SiSpringboot className="text-green-400" size={22} />, category: 'Backend', color: 'from-green-500/20 to-emerald-500/20', border: 'border-green-500/30' },
+  { name: 'Kafka', level: 75, icon: <FiActivity className="text-slate-300" size={22} />, category: 'Backend', color: 'from-slate-500/15 to-slate-400/15', border: 'border-slate-500/25' },
+  { name: 'Docker', level: 78, icon: <FaDocker className="text-blue-400" size={22} />, category: 'Backend', color: 'from-blue-500/15 to-cyan-500/15', border: 'border-blue-500/25' },
+  { name: 'PostgreSQL', level: 89, icon: <SiPostgresql className="text-indigo-400" size={22} />, category: 'Database', color: 'from-indigo-500/20 to-violet-500/20', border: 'border-indigo-500/30' },
+  { name: 'MongoDB', level: 72, icon: <SiMongodb className="text-emerald-400" size={22} />, category: 'Database', color: 'from-emerald-500/15 to-green-500/15', border: 'border-emerald-500/25' },
+  { name: 'Redis', level: 75, icon: <SiRedis className="text-rose-400" size={22} />, category: 'Database', color: 'from-rose-500/15 to-red-500/15', border: 'border-rose-500/25' },
+  { name: 'System Design', level: 88, icon: <FiLayout className="text-violet-400" size={22} />, category: 'Concepts', color: 'from-violet-500/20 to-purple-500/20', border: 'border-violet-500/30' },
+  { name: 'Performance', level: 90, icon: <FiZap className="text-yellow-400" size={22} />, category: 'Concepts', color: 'from-yellow-500/15 to-amber-500/15', border: 'border-yellow-500/25' },
+  { name: 'Security', level: 85, icon: <FiShield className="text-emerald-400" size={22} />, category: 'Concepts', color: 'from-emerald-500/15 to-teal-500/15', border: 'border-emerald-500/25' },
+  { name: 'Git & CI/CD', level: 88, icon: <FiGitBranch className="text-rose-400" size={22} />, category: 'Concepts', color: 'from-rose-500/15 to-pink-500/15', border: 'border-rose-500/25' },
+];
 
 export default function Skills() {
   return (
     <section id="skills" className="relative">
       <div className="section-container">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-14"
-        >
-          <p className="text-primary-400 font-mono text-sm tracking-widest mb-2">02. SKILLS</p>
-          <h2 className="section-title">Technical Skills</h2>
-          <div className="w-12 h-1 bg-gradient-to-r from-primary-500 to-violet-500 rounded-full" />
-        </motion.div>
-
-        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6">
-          {Object.entries(skills).map(([category, items], catIndex) => (
-            <motion.div
-              key={category}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: catIndex * 0.1 }}
-              className={`card bg-gradient-to-br ${categoryColors[category]} p-5 rounded-2xl`}
-            >
-              <h3 className="font-bold text-white mb-5 text-sm tracking-wide uppercase">{category}</h3>
-              <div className="space-y-4">
-                {items.map((skill, i) => (
-                  <div key={skill.name}>
-                    <div className="flex items-center gap-3 mb-1.5">
-                      <div className="w-7 h-7 flex items-center justify-center">
-                        {iconMap[skill.icon] || <FaDatabase size={20} className="text-slate-400" />}
-                      </div>
-                      <span className="text-sm text-slate-300 font-medium">{skill.name}</span>
-                    </div>
-                    {/* Progress bar */}
-                    <div className="h-1 bg-white/5 rounded-full overflow-hidden ml-10">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: catIndex * 0.1 + i * 0.05, ease: 'easeOut' }}
-                        className={`h-full rounded-full ${categoryAccent[category]}`}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+        <SectionHeader 
+          number="02" 
+          label="Skills & Expertise" 
+          title="Technology Constellation" 
+          subtitle="An interactive map of my technical proficiencies across distributed systems, backend engineering, and frontend development." 
+        />
+        
+        <div className="mt-8">
+          <SkillsNetwork />
         </div>
       </div>
     </section>
