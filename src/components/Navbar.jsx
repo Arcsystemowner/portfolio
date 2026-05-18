@@ -119,15 +119,16 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-dark-800/95 backdrop-blur-xl border-b border-white/5"
+            style={{ overflow: 'hidden' }}
+            className="md:hidden bg-dark-900/95 backdrop-blur-2xl border-b border-white/10"
           >
-            <nav className="flex flex-col px-6 py-4 gap-1">
+            <nav className="flex flex-col px-4 py-4 gap-2">
               {navLinks.map(({ label, href, id }) => (
                 <button
                   key={label}
                   onClick={() => handleNav(href)}
-                  className={`text-left py-3 text-sm font-medium border-b border-white/5 last:border-0 transition-colors ${
-                    activeSection === id ? 'text-primary-400' : 'text-slate-400 hover:text-white'
+                  className={`block w-full text-left px-4 py-3 rounded-xl text-base font-medium transition-all ${
+                    activeSection === id ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
                   }`}
                 >
                   {label}

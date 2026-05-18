@@ -69,7 +69,7 @@ export default function Hero() {
             {/* Greeting */}
             <motion.p
               variants={item}
-              className="text-primary-400 font-mono text-sm mb-3 tracking-widest uppercase flex items-center gap-2"
+              className="text-primary-400 font-mono text-xs sm:text-sm mb-3 tracking-widest uppercase flex items-center gap-2"
             >
               <span className="w-4 h-px bg-primary-500/50"></span>
               SYS.ADMIN // IDENTIFIED
@@ -78,7 +78,7 @@ export default function Hero() {
             {/* Name */}
             <motion.h1
               variants={item}
-              className="text-5xl sm:text-6xl lg:text-7xl font-bold font-display text-white leading-[1.05] mb-4"
+              className="text-4xl sm:text-6xl lg:text-7xl font-bold font-display text-white leading-[1.1] mb-4"
             >
               Archit{' '}
               <span className="relative">
@@ -114,11 +114,11 @@ export default function Hero() {
             {/* CTAs */}
             <motion.div
               variants={item}
-              className="flex flex-wrap items-center gap-4 mb-12"
+              className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 mb-12"
             >
               <motion.button
                 onClick={() => scrollTo('#projects')}
-                className="btn-primary group relative overflow-hidden"
+                className="btn-primary w-full sm:w-auto justify-center group relative overflow-hidden"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
                 id="hero-view-projects-btn"
@@ -138,7 +138,7 @@ export default function Hero() {
               <motion.a
                 href="/resume.pdf"
                 download
-                className="btn-outline group"
+                className="btn-outline w-full sm:w-auto justify-center group"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
                 id="hero-download-resume-btn"
@@ -154,7 +154,7 @@ export default function Hero() {
 
               <motion.button
                 onClick={() => scrollTo('#contact')}
-                className="btn-outline border-transparent bg-dark-800 hover:bg-dark-700 hover:text-white group"
+                className="btn-outline w-full sm:w-auto justify-center border-transparent bg-dark-800 hover:bg-dark-700 hover:text-white group"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
                 id="hero-contact-btn"
