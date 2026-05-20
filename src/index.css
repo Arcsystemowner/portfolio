@@ -73,8 +73,32 @@
     --primary-900: 15 23 42;
   }
 
-  html {
+  html, body {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  /* Custom scrollbar styling for webkit browsers */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 30, 0.35);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.4);
+  }
+
+  /* Firefox standard styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) rgba(10, 15, 30, 0.35);
   }
 
   /* Cursor: hide default on desktop */

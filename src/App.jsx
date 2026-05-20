@@ -8,7 +8,7 @@ import About from "./sections/About";
 import Skills from "./sections/Skills";
 import Projects from "./sections/Projects";
 import Experience from "./sections/Experience";
-import SystemDesign from "./sections/SystemDesign";
+import SystemDesignCarousel from "./sections/SystemDesignCarousel";
 import Observability from "./sections/Observability";
 import Contact from "./sections/Contact";
 import Footer from "./sections/Footer";
@@ -19,7 +19,7 @@ import { useSmoothScroll } from "./hooks/useSmoothScroll";
 function App() {
   const [loading, setLoading] = useState(true);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
-  
+
   useSmoothScroll();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function App() {
         setIsTerminalOpen((prev) => !prev);
       }
     };
-    
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
@@ -45,7 +45,7 @@ function App() {
   if (loading) return <Loader />;
 
   return (
-    <div className="relative">
+    <div className="relative min-h-screen w-full overflow-x-hidden">
       <CustomCursor />
       <ScrollProgress />
       <Navbar />
@@ -55,14 +55,14 @@ function App() {
         <Skills />
         <Projects />
         <Experience />
-        <SystemDesign />
+        <SystemDesignCarousel />
         <Observability />
         <Contact />
       </main>
       <Footer />
-      <TerminalMode 
-        isOpen={isTerminalOpen} 
-        onClose={() => setIsTerminalOpen(false)} 
+      <TerminalMode
+        isOpen={isTerminalOpen}
+        onClose={() => setIsTerminalOpen(false)}
       />
       {/* <ThemeSwitcher /> */}
     </div>
