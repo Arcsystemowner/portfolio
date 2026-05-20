@@ -126,6 +126,7 @@ export default function TerminalMode({ isOpen, onClose }) {
 
             {/* Terminal Body */}
             <div 
+              data-lenis-prevent
               className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#050505] text-primary-400"
               onClick={() => inputRef.current?.focus()}
             >

@@ -59,6 +59,7 @@ export default function ProjectDetailModal({ project, isOpen, onClose }) {
               stiffness: 260,
               damping: 20,
             }}
+            data-lenis-prevent
             className="fixed inset-4 md:inset-10 lg:inset-20 z-50 overflow-y-auto"
           >
             <motion.div

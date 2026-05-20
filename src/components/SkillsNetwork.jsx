@@ -53,11 +53,21 @@ export default function SkillsNetwork() {
   const [hovered, setHovered] = useState(null);
   const [selected, setSelected] = useState(null);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 50);
     return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const active = selected || hovered;
@@ -79,8 +89,169 @@ export default function SkillsNetwork() {
     return !isHighlighted(node) && node.id !== active;
   };
 
+  if (isMobile) {
+    return (
+      <div className="w-full flex flex-col gap-4 font-mono select-none">
+        {/* Status Header */}
+        <div className="flex items-center justify-between bg-dark-800/40 border border-white/[0.06] rounded-xl p-3.5 px-4 backdrop-blur-md">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse" />
+            <span className="text-primary-400 text-xs font-bold tracking-wider">
+              NETWORK_GRAPH.exe
+            </span>
+          </div>
+          <span className="text-slate-500 text-[10px]">
+            {active ? `NODE: ${active.toUpperCase()}` : "STATUS: ONLINE"}
+          </span>
+        </div>
+
+        {/* Categories / Domains List */}
+        <div className="flex flex-col gap-3">
+          {CATEGORIES.map((cat) => {
+            const isCatActive = active === cat.id || (activeSkill && activeSkill.parent === cat.id);
+            const skillsInCat = SKILLS.filter(s => s.parent === cat.id);
+            const isCatSelected = selected === cat.id;
+            
+            return (
+              <div
+                key={cat.id}
+                onClick={() => {
+                  setSelected(selected === cat.id ? null : cat.id);
+                }}
+                className="transition-all duration-300 rounded-xl border p-4 bg-dark-900/60 backdrop-blur-md cursor-pointer"
+                style={{
+                  borderColor: isCatActive ? `${cat.color}50` : 'rgba(255,255,255,0.06)',
+                  boxShadow: isCatActive ? `0 4px 20px ${cat.color}15, inset 0 0 12px ${cat.color}05` : 'none'
+                }}
+              >
+                {/* Domain Header */}
+                <div className="flex items-center gap-2.5 mb-3.5">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{
+                      background: cat.color,
+                      boxShadow: `0 0 8px ${cat.color}`
+                    }}
+                  />
+                  <span
+                    className="font-bold text-xs tracking-wider"
+                    style={{ color: cat.color }}
+                  >
+                    {cat.label.toUpperCase()}
+                  </span>
+                  
+                  {/* Indicator Arrow */}
+                  <span className="ml-auto text-slate-500 text-[10px]">
+                    {isCatSelected ? "▲" : "▼"}
+                  </span>
+                </div>
+
+                {/* Skills Pills in Category */}
+                <div className="flex flex-wrap gap-2">
+                  {skillsInCat.map((s) => {
+                    const isSActive = active === s.id;
+                    const SIcon = s.Icon;
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelected(selected === s.id ? null : s.id);
+                        }}
+                        className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200"
+                        style={{
+                          background: isSActive ? `${cat.color}25` : 'rgba(255,255,255,0.04)',
+                          border: `1px solid ${isSActive ? cat.color : 'rgba(255,255,255,0.08)'}`,
+                          color: isSActive ? cat.color : 'rgba(255,255,255,0.6)'
+                        }}
+                      >
+                        <SIcon size={13} style={{ color: isSActive ? cat.color : 'inherit' }} />
+                        <span>{s.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Detailed Info Panel (Mobile) */}
+        {activeNode && (
+          <div
+            className="transition-all duration-300 rounded-xl border p-5 bg-dark-950/94 backdrop-blur-md shadow-2xl"
+            style={{
+              borderColor: `${activeSkill ? activeSkill.expColor : activeCategory.color}40`,
+              boxShadow: `0 10px 30px rgba(0,0,0,0.6), inset 0 0 15px ${activeSkill ? activeSkill.expColor : activeCategory.color}05`
+            }}
+          >
+            {activeSkill ? (
+              <>
+                <div className="flex items-center gap-3.5 mb-4">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center border"
+                    style={{
+                      background: `${activeSkill.expColor}15`,
+                      borderColor: `${activeSkill.expColor}30`,
+                      color: activeSkill.expColor
+                    }}
+                  >
+                    <activeSkill.Icon size={18} />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-bold text-sm tracking-wide">
+                      {activeSkill.label}
+                    </h4>
+                    <span
+                      className="text-[9px] tracking-widest font-semibold block mt-0.5"
+                      style={{ color: activeSkill.expColor }}
+                    >
+                      {activeSkill.exp.toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="ml-auto">
+                    <ExpDots level={activeSkill.exp} />
+                  </div>
+                </div>
+
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  {activeSkill.desc}
+                </p>
+
+                <div className="flex items-center gap-2 pt-3.5 border-t border-white/5">
+                  <span
+                    className="w-1.5 h-1.5 rounded-full"
+                    style={{ background: getCategoryById(activeSkill.parent).color }}
+                  />
+                  <span className="text-slate-500 text-[9px] tracking-wider uppercase">
+                    Domain: {getCategoryById(activeSkill.parent).label}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-3">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{ background: activeCategory.color, boxShadow: `0 0 8px ${activeCategory.color}` }}
+                  />
+                  <span className="font-bold text-xs tracking-wider" style={{ color: activeCategory.color }}>
+                    {activeCategory.label.toUpperCase()} OVERVIEW
+                  </span>
+                </div>
+                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  Tap on any specific skill inside the domain card to view comprehensive experience details, technical background, and applications.
+                </p>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
+    <div data-lenis-prevent className="w-full overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
       <div
         ref={containerRef}
         style={{

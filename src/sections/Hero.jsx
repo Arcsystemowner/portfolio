@@ -26,8 +26,17 @@ const techOrbit = [
 ];
 
 export default function Hero() {
-  const scrollTo = (id) =>
-    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = (id) => {
+    if (window.lenis) {
+      window.lenis.scrollTo(id, { offset: -64 });
+    } else {
+      const target = document.querySelector(id);
+      if (target) {
+        const top = target.getBoundingClientRect().top + window.scrollY - 64;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <section
@@ -78,10 +87,10 @@ export default function Hero() {
             {/* Name */}
             <motion.h1
               variants={item}
-              className="text-4xl sm:text-6xl lg:text-7xl font-bold font-display text-white leading-[1.1] mb-4"
+              className="text-3xl xs:text-4xl sm:text-6xl lg:text-7xl font-bold font-display text-white leading-[1.15] mb-4"
             >
               Archit{' '}
-              <span className="relative">
+              <span className="relative inline-block">
                 <span className="gradient-text">Yadav</span>
                 <motion.span
                   className="absolute -bottom-2 left-0 right-0 h-[3px] bg-gradient-to-r from-primary-500 via-violet-500 to-cyan-500 rounded-full"
@@ -95,7 +104,7 @@ export default function Hero() {
             {/* Role with typing */}
             <motion.div
               variants={item}
-              className="text-lg sm:text-2xl font-semibold text-slate-300 mb-5 sm:mb-6 min-h-[32px] sm:min-h-[36px] flex items-center gap-2"
+              className="text-base sm:text-2xl font-semibold text-slate-300 mb-5 sm:mb-6 min-h-[32px] sm:min-h-[36px] flex items-center gap-2"
             >
               <span className="text-slate-500">/</span>
               <TypingAnimation />
@@ -104,7 +113,7 @@ export default function Hero() {
             {/* Tagline */}
             <motion.p
               variants={item}
-              className="text-slate-400 text-base sm:text-lg max-w-xl leading-relaxed mb-10"
+              className="text-slate-400 text-sm sm:text-lg max-w-xl leading-relaxed mb-10"
             >
               Architecting <span className="text-white font-medium">scalable distributed systems</span> and{' '}
               <span className="text-primary-400 font-medium">real-time platforms</span>. 
@@ -114,7 +123,7 @@ export default function Hero() {
             {/* CTAs */}
             <motion.div
               variants={item}
-              className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 mb-12"
+              className="grid grid-cols-1 sm:flex sm:flex-row gap-3.5 sm:gap-4 mb-12 w-full max-w-md sm:max-w-none"
             >
               <motion.button
                 onClick={() => scrollTo('#projects')}
@@ -164,7 +173,7 @@ export default function Hero() {
             </motion.div>
 
             {/* Social links */}
-            <motion.div variants={item} className="flex items-center gap-5">
+            <motion.div variants={item} className="flex items-center gap-4 sm:gap-5 flex-wrap">
               <motion.a
                 href="https://github.com/Arcsystemowner"
                 target="_blank"
@@ -175,7 +184,7 @@ export default function Hero() {
                 id="hero-github-link"
               >
                 <FaGithub size={20} />
-                <span className="text-sm font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="hidden md:inline-block text-sm font-mono opacity-0 group-hover:opacity-100 transition-opacity">
                   GitHub
                 </span>
               </motion.a>
@@ -189,11 +198,11 @@ export default function Hero() {
                 id="hero-linkedin-link"
               >
                 <FaLinkedin size={20} />
-                <span className="text-sm font-mono opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="hidden md:inline-block text-sm font-mono opacity-0 group-hover:opacity-100 transition-opacity">
                   LinkedIn
                 </span>
               </motion.a>
-              <div className="h-px w-14 bg-white/10" />
+              <div className="hidden xs:block h-px w-8 sm:w-14 bg-white/10" />
               <span className="text-slate-600 text-xs font-mono">archityadav.dev</span>
             </motion.div>
           </motion.div>

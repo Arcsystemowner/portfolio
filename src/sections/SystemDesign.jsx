@@ -64,7 +64,7 @@ function MiniSparkline({ color }) {
     return () => clearInterval(t);
   }, []);
   const w = 72, h = 36;
-  const path = points.map((v, i) => `${(i / (points.length - 1)) * w},${h - v}`).join(" L ");
+  const path = points.map((v, i) => `${(i / (points.length - 1)) * w},${h - v}`).join(" ");
   return (
     <svg width={w} height={h} style={{ display: "block" }}>
       <polyline points={path} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.8" />
@@ -281,7 +281,7 @@ export default function SystemDesign() {
   };
 
   return (
-    <div className="w-full overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
+    <div data-lenis-prevent className="w-full overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
       <div style={{
         position: "relative", width: "80%", minWidth: 800, height: 580,
         background: "linear-gradient(135deg, #060910 0%, #0a0d16 60%, #06090f 100%)",

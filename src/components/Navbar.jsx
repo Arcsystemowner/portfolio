@@ -26,7 +26,15 @@ export default function Navbar() {
   }, []);
 
   const handleNav = (href) => {
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    if (window.lenis) {
+      window.lenis.scrollTo(href, { offset: -64 });
+    } else {
+      const target = document.querySelector(href);
+      if (target) {
+        const top = target.getBoundingClientRect().top + window.scrollY - 64;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }
     // Add a slight delay before closing to ensure the click registers smoothly on mobile
     setTimeout(() => {
       setMenuOpen(false);
