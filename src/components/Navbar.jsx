@@ -10,6 +10,7 @@ const navLinks = [
   { label: 'Skills', href: '#skills', id: 'skills' },
   { label: 'Projects', href: '#projects', id: 'projects' },
   { label: 'Experience', href: '#experience', id: 'experience' },
+  { label: 'UI Lab', href: '#frontend-playground', id: 'frontend-playground' },
   { label: 'Contact', href: '#contact', id: 'contact' },
 ];
 
@@ -48,7 +49,9 @@ export default function Navbar() {
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-dark-900/85 backdrop-blur-xl border-b border-white/5 shadow-2xl shadow-black/20'
+          ? isDark
+            ? 'bg-slate-950/75 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-black/20'
+            : 'bg-white/75 backdrop-blur-xl border-b border-slate-200 shadow-lg shadow-slate-200/50'
           : 'bg-transparent'
       }`}
     >
@@ -72,7 +75,9 @@ export default function Navbar() {
               onClick={() => handleNav(href)}
               id={`nav-${id}`}
               className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-lg ${
-                activeSection === id ? 'text-white' : 'text-slate-500 hover:text-slate-200'
+                activeSection === id
+                  ? isDark ? 'text-white' : 'text-slate-900'
+                  : isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               {label}
@@ -89,14 +94,17 @@ export default function Navbar() {
 
         {/* Right controls */}
         <div className="flex items-center gap-2">
-          {/* Theme toggle */}
-          {/* <motion.button
+          <motion.button
             onClick={toggleTheme}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             id="nav-theme-toggle"
             aria-label="Toggle theme"
-            className="w-9 h-9 rounded-lg flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-all duration-200"
+            className={`w-9 h-9 rounded-lg flex items-center justify-center border transition-all duration-200 ${
+              isDark
+                ? 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-300 hover:text-white'
+                : 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-700 hover:text-slate-900'
+            }`}
           >
             <AnimatePresence mode="wait">
               <motion.span
@@ -109,13 +117,17 @@ export default function Navbar() {
                 {isDark ? <FiSun size={16} /> : <FiMoon size={16} />}
               </motion.span>
             </AnimatePresence>
-          </motion.button> */}
+          </motion.button>
 
           {/* Mobile menu toggle */}
           <button
             onClick={() => setMenuOpen((o) => !o)}
             id="nav-mobile-menu"
-            className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-all duration-200"
+            className={`md:hidden w-9 h-9 rounded-lg flex items-center justify-center border transition-all duration-200 ${
+              isDark
+                ? 'bg-white/5 hover:bg-white/10 border-white/10 text-slate-400 hover:text-white'
+                : 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-700 hover:text-slate-900'
+            }`}
             aria-label="Menu"
           >
             {menuOpen ? <FiX size={18} /> : <FiMenu size={18} />}
@@ -131,7 +143,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             style={{ overflow: 'hidden' }}
-            className="md:hidden bg-dark-900/95 backdrop-blur-2xl border-b border-white/10"
+            className={isDark ? 'md:hidden bg-slate-950/95 backdrop-blur-2xl border-b border-white/10' : 'md:hidden bg-white/90 backdrop-blur-2xl border-b border-slate-200'}
           >
             <nav className="flex flex-col px-4 py-4 gap-2">
               {navLinks.map(({ label, href, id }) => (
@@ -143,7 +155,9 @@ export default function Navbar() {
                     handleNav(href);
                   }}
                   className={`block w-full text-left px-4 py-3 rounded-xl text-base font-medium transition-all ${
-                    activeSection === id ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                    activeSection === id
+                      ? isDark ? 'bg-primary-500/10 text-primary-400 border border-primary-500/20' : 'bg-primary-50 text-primary-700 border border-primary-200'
+                      : isDark ? 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent'
                   }`}
                 >
                   {label}

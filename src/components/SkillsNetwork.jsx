@@ -24,9 +24,24 @@ const SKILLS = [
 ];
 
 const EXP_LEVELS = { Advanced: 3, Intermediate: 2, Beginner: 1 };
+const LIGHT_CATEGORY_COLORS = {
+  backend: "#b45309",
+  frontend: "#2563eb",
+  messaging: "#7c3aed",
+  database: "#047857",
+  devops: "#dc2626",
+};
 
 function getCategoryById(id) {
   return CATEGORIES.find((c) => c.id === id);
+}
+
+function getCategoryColor(category, isDark) {
+  return isDark ? category.color : LIGHT_CATEGORY_COLORS[category.id];
+}
+
+function getSkillColor(skill, isDark) {
+  return isDark ? skill.expColor : LIGHT_CATEGORY_COLORS[skill.parent];
 }
 
 
@@ -50,11 +65,23 @@ function ExpDots({ level }) {
 }
 
 export default function SkillsNetwork() {
+  const [isDark, setIsDark] = useState(() =>
+    typeof document === "undefined" || !document.documentElement.classList.contains("light")
+  );
   const [hovered, setHovered] = useState(null);
   const [selected, setSelected] = useState(null);
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const updateTheme = () => setIsDark(!root.classList.contains("light"));
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    updateTheme();
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 50);
@@ -74,6 +101,8 @@ export default function SkillsNetwork() {
   const activeSkill = SKILLS.find((s) => s.id === active);
   const activeCategory = CATEGORIES.find((c) => c.id === active);
   const activeNode = activeSkill || activeCategory;
+  const activeSkillColor = activeSkill ? getSkillColor(activeSkill, isDark) : null;
+  const activeCategoryColor = activeCategory ? getCategoryColor(activeCategory, isDark) : null;
 
   const isHighlighted = (node) => {
     if (!active) return false;
@@ -93,14 +122,20 @@ export default function SkillsNetwork() {
     return (
       <div className="w-full flex flex-col gap-4 font-mono select-none">
         {/* Status Header */}
-        <div className="flex items-center justify-between bg-dark-800/40 border border-white/[0.06] rounded-xl p-3.5 px-4 backdrop-blur-md">
+        <div
+          className="flex items-center justify-between rounded-xl p-3.5 px-4 backdrop-blur-md"
+          style={{
+            background: isDark ? "rgba(17,17,24,0.65)" : "rgba(255,255,255,0.88)",
+            border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(148,163,184,0.3)"}`,
+          }}
+        >
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse" />
-            <span className="text-primary-400 text-xs font-bold tracking-wider">
+            <span className={`text-xs font-bold tracking-wider ${isDark ? "text-primary-400" : "text-indigo-700"}`}>
               NETWORK_GRAPH.exe
             </span>
           </div>
-          <span className="text-slate-500 text-[10px]">
+          <span className={`text-[10px] ${isDark ? "text-slate-500" : "text-slate-500"}`}>
             {active ? `NODE: ${active.toUpperCase()}` : "STATUS: ONLINE"}
           </span>
         </div>
@@ -108,6 +143,7 @@ export default function SkillsNetwork() {
         {/* Categories / Domains List */}
         <div className="flex flex-col gap-3">
           {CATEGORIES.map((cat) => {
+            const color = getCategoryColor(cat, isDark);
             const isCatActive = active === cat.id || (activeSkill && activeSkill.parent === cat.id);
             const skillsInCat = SKILLS.filter(s => s.parent === cat.id);
             const isCatSelected = selected === cat.id;
@@ -120,8 +156,9 @@ export default function SkillsNetwork() {
                 }}
                 className="transition-all duration-300 rounded-xl border p-4 bg-dark-900/60 backdrop-blur-md cursor-pointer"
                 style={{
-                  borderColor: isCatActive ? `${cat.color}50` : 'rgba(255,255,255,0.06)',
-                  boxShadow: isCatActive ? `0 4px 20px ${cat.color}15, inset 0 0 12px ${cat.color}05` : 'none'
+                  background: isDark ? "rgba(10,15,25,0.82)" : "rgba(255,255,255,0.88)",
+                  borderColor: isCatActive ? `${color}50` : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(148,163,184,0.3)',
+                  boxShadow: isCatActive ? `0 4px 20px ${color}15, inset 0 0 12px ${color}05` : isDark ? 'none' : '0 8px 20px rgba(15,23,42,0.05)'
                 }}
               >
                 {/* Domain Header */}
@@ -129,13 +166,13 @@ export default function SkillsNetwork() {
                   <span
                     className="w-2.5 h-2.5 rounded-full"
                     style={{
-                      background: cat.color,
-                      boxShadow: `0 0 8px ${cat.color}`
+                      background: color,
+                      boxShadow: `0 0 8px ${color}`
                     }}
                   />
                   <span
                     className="font-bold text-xs tracking-wider"
-                    style={{ color: cat.color }}
+                    style={{ color }}
                   >
                     {cat.label.toUpperCase()}
                   </span>
@@ -160,12 +197,12 @@ export default function SkillsNetwork() {
                         }}
                         className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-200"
                         style={{
-                          background: isSActive ? `${cat.color}25` : 'rgba(255,255,255,0.04)',
-                          border: `1px solid ${isSActive ? cat.color : 'rgba(255,255,255,0.08)'}`,
-                          color: isSActive ? cat.color : 'rgba(255,255,255,0.6)'
+                          background: isSActive ? `${color}18` : isDark ? 'rgba(255,255,255,0.04)' : 'rgba(241,245,249,0.9)',
+                          border: `1px solid ${isSActive ? `${color}70` : isDark ? 'rgba(255,255,255,0.08)' : 'rgba(148,163,184,0.28)'}`,
+                          color: isSActive ? color : isDark ? 'rgba(255,255,255,0.6)' : '#475569'
                         }}
                       >
-                        <SIcon size={13} style={{ color: isSActive ? cat.color : 'inherit' }} />
+                        <SIcon size={13} style={{ color: isSActive ? color : 'inherit' }} />
                         <span>{s.label}</span>
                       </button>
                     );
@@ -179,10 +216,11 @@ export default function SkillsNetwork() {
         {/* Detailed Info Panel (Mobile) */}
         {activeNode && (
           <div
-            className="transition-all duration-300 rounded-xl border p-5 bg-dark-950/94 backdrop-blur-md shadow-2xl"
+            className="transition-all duration-300 rounded-xl border p-5 backdrop-blur-md"
             style={{
-              borderColor: `${activeSkill ? activeSkill.expColor : activeCategory.color}40`,
-              boxShadow: `0 10px 30px rgba(0,0,0,0.6), inset 0 0 15px ${activeSkill ? activeSkill.expColor : activeCategory.color}05`
+              background: isDark ? "rgba(10,13,20,0.94)" : "rgba(255,255,255,0.94)",
+              borderColor: `${activeSkill ? getSkillColor(activeSkill, isDark) : getCategoryColor(activeCategory, isDark)}40`,
+              boxShadow: isDark ? "0 10px 30px rgba(0,0,0,0.6)" : "0 10px 30px rgba(15,23,42,0.08)"
             }}
           >
             {activeSkill ? (
@@ -191,9 +229,9 @@ export default function SkillsNetwork() {
                   <div
                     className="w-10 h-10 rounded-full flex items-center justify-center border"
                     style={{
-                      background: `${activeSkill.expColor}15`,
-                      borderColor: `${activeSkill.expColor}30`,
-                      color: activeSkill.expColor
+                      background: `${activeSkillColor}15`,
+                      borderColor: `${activeSkillColor}30`,
+                      color: activeSkillColor
                     }}
                   >
                     <activeSkill.Icon size={18} />
@@ -204,7 +242,7 @@ export default function SkillsNetwork() {
                     </h4>
                     <span
                       className="text-[9px] tracking-widest font-semibold block mt-0.5"
-                      style={{ color: activeSkill.expColor }}
+                      style={{ color: activeSkillColor }}
                     >
                       {activeSkill.exp.toUpperCase()}
                     </span>
@@ -214,16 +252,16 @@ export default function SkillsNetwork() {
                   </div>
                 </div>
 
-                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                <p className={`text-xs leading-relaxed mb-4 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
                   {activeSkill.desc}
                 </p>
 
-                <div className="flex items-center gap-2 pt-3.5 border-t border-white/5">
+                <div className={`flex items-center gap-2 pt-3.5 border-t ${isDark ? "border-white/5" : "border-slate-200"}`}>
                   <span
                     className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: getCategoryById(activeSkill.parent).color }}
+                    style={{ background: getCategoryColor(getCategoryById(activeSkill.parent), isDark) }}
                   />
-                  <span className="text-slate-500 text-[9px] tracking-wider uppercase">
+                  <span className={`text-[9px] tracking-wider uppercase ${isDark ? "text-slate-500" : "text-slate-500"}`}>
                     Domain: {getCategoryById(activeSkill.parent).label}
                   </span>
                 </div>
@@ -233,13 +271,13 @@ export default function SkillsNetwork() {
                 <div className="flex items-center gap-2 mb-3">
                   <span
                     className="w-2.5 h-2.5 rounded-full"
-                    style={{ background: activeCategory.color, boxShadow: `0 0 8px ${activeCategory.color}` }}
+                    style={{ background: activeCategoryColor, boxShadow: `0 0 8px ${activeCategoryColor}` }}
                   />
-                  <span className="font-bold text-xs tracking-wider" style={{ color: activeCategory.color }}>
+                  <span className="font-bold text-xs tracking-wider" style={{ color: activeCategoryColor }}>
                     {activeCategory.label.toUpperCase()} OVERVIEW
                   </span>
                 </div>
-                <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                <p className={`text-xs leading-relaxed mb-4 ${isDark ? "text-slate-400" : "text-slate-600"}`}>
                   Tap on any specific skill inside the domain card to view comprehensive experience details, technical background, and applications.
                 </p>
               </>
@@ -254,15 +292,19 @@ export default function SkillsNetwork() {
     <div data-lenis-prevent className="w-full overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0" style={{ WebkitOverflowScrolling: 'touch' }}>
       <div
         ref={containerRef}
+        className={isDark ? "skills-network skills-network-dark" : "skills-network skills-network-light"}
         style={{
           position: "relative",
           width: "100%",
           minWidth: 800,
           aspectRatio: "16/9",
           maxHeight: 680,
-          background: "linear-gradient(135deg, #0a0d14 0%, #0d1117 50%, #0a0f18 100%)",
+          background: isDark
+            ? "linear-gradient(135deg, #0a0d14 0%, #0d1117 50%, #0a0f18 100%)"
+            : "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 52%, #eef2ff 100%)",
           borderRadius: 20,
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(148,163,184,0.35)",
+          boxShadow: isDark ? "none" : "0 18px 45px rgba(15,23,42,0.08)",
           overflow: "hidden",
           fontFamily: "monospace",
           userSelect: "none",
@@ -277,13 +319,17 @@ export default function SkillsNetwork() {
       <div style={{
         position: "absolute", top: "10%", left: "20%",
         width: 320, height: 320, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)",
+        background: isDark
+          ? "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)"
+          : "radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%)",
         pointerEvents: "none",
       }} />
       <div style={{
         position: "absolute", bottom: "10%", right: "15%",
         width: 280, height: 280, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%)",
+        background: isDark
+          ? "radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%)"
+          : "radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 70%)",
         pointerEvents: "none",
       }} />
 
@@ -293,6 +339,7 @@ export default function SkillsNetwork() {
       >
         {SKILLS.map((skill) => {
           const cat = getCategoryById(skill.parent);
+          const color = getCategoryColor(cat, isDark);
           const isActive = active && (skill.id === active || skill.parent === active ||
             (activeSkill && skill.parent === activeSkill.parent));
           const dim = isDimmed(skill);
@@ -301,13 +348,13 @@ export default function SkillsNetwork() {
               key={skill.id}
               x1={`${cat.x}%`} y1={`${cat.y}%`}
               x2={`${skill.x}%`} y2={`${skill.y}%`}
-              stroke={isActive ? cat.color : "rgba(255,255,255,0.06)"}
+              stroke={isActive ? color : isDark ? "rgba(255,255,255,0.06)" : "rgba(100,116,139,0.24)"}
               strokeWidth={isActive ? 1.5 : 0.8}
               strokeDasharray={isActive ? "none" : "4 4"}
               opacity={dim ? 0.2 : 1}
               style={{
                 transition: "all 0.35s ease",
-                filter: isActive ? `drop-shadow(0 0 6px ${cat.color}80)` : "none",
+                filter: isActive ? `drop-shadow(0 0 6px ${color}80)` : "none",
               }}
             />
           );
@@ -316,6 +363,7 @@ export default function SkillsNetwork() {
 
       {/* Category Nodes */}
       {CATEGORIES.map((cat, i) => {
+        const color = getCategoryColor(cat, isDark);
         const isAct = active === cat.id || (activeSkill && activeSkill.parent === cat.id);
         const dim = active && !isAct && !(activeSkill && activeSkill.parent === cat.id);
         return (
@@ -342,7 +390,7 @@ export default function SkillsNetwork() {
             {/* Outer glow ring */}
             <div style={{
               position: "absolute", inset: -8, borderRadius: "50%",
-              background: isAct ? cat.glow : "transparent",
+              background: isAct ? `${color}24` : "transparent",
               transition: "background 0.35s ease",
               pointerEvents: "none",
             }} />
@@ -352,23 +400,23 @@ export default function SkillsNetwork() {
                 height: isAct ? 72 : 64,
                 borderRadius: "50%",
                 background: isAct
-                  ? `radial-gradient(circle at 40% 35%, ${cat.color}22, ${cat.color}08)`
-                  : "rgba(15,20,30,0.9)",
-                border: `${isAct ? 2 : 1.5}px solid ${isAct ? cat.color : "rgba(255,255,255,0.1)"}`,
+                  ? `radial-gradient(circle at 40% 35%, ${color}22, ${color}08)`
+                  : isDark ? "rgba(15,20,30,0.9)" : "rgba(255,255,255,0.94)",
+                border: `${isAct ? 2 : 1.5}px solid ${isAct ? color : isDark ? "rgba(255,255,255,0.1)" : "rgba(148,163,184,0.45)"}`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 transition: "all 0.3s ease",
                 boxShadow: isAct
-                  ? `0 0 24px ${cat.color}50, inset 0 0 12px ${cat.color}10`
-                  : "0 4px 20px rgba(0,0,0,0.4)",
+                  ? `0 0 24px ${color}35, inset 0 0 12px ${color}10`
+                  : isDark ? "0 4px 20px rgba(0,0,0,0.4)" : "0 6px 18px rgba(15,23,42,0.09)",
               }}
             >
               <span style={{
                 fontSize: 9,
                 fontWeight: 700,
                 letterSpacing: "0.12em",
-                color: isAct ? cat.color : "rgba(255,255,255,0.7)",
+                color: isAct ? color : isDark ? "rgba(255,255,255,0.7)" : "#334155",
                 textTransform: "uppercase",
                 textAlign: "center",
                 lineHeight: 1.3,
@@ -385,6 +433,7 @@ export default function SkillsNetwork() {
       {/* Skill Nodes */}
       {SKILLS.map((skill, i) => {
         const cat = getCategoryById(skill.parent);
+        const color = getCategoryColor(cat, isDark);
         const isAct = active === skill.id || (active === skill.parent) ||
           (activeSkill && activeSkill.parent === skill.parent);
         const isFocused = active === skill.id;
@@ -416,18 +465,18 @@ export default function SkillsNetwork() {
               bottom: "calc(100% + 8px)",
               left: "50%",
               transform: "translateX(-50%)",
-              background: "rgba(10,13,20,0.95)",
-              border: `1px solid ${cat.color}60`,
+              background: isDark ? "rgba(10,13,20,0.95)" : "rgba(255,255,255,0.98)",
+              border: `1px solid ${color}60`,
               borderRadius: 6,
               padding: "3px 8px",
               fontSize: 10,
-              color: cat.color,
+              color,
               letterSpacing: "0.06em",
               whiteSpace: "nowrap",
               opacity: isFocused ? 1 : 0,
               pointerEvents: "none",
               transition: "opacity 0.2s ease",
-              boxShadow: `0 4px 16px rgba(0,0,0,0.5)`,
+              boxShadow: isDark ? "0 4px 16px rgba(0,0,0,0.5)" : "0 4px 16px rgba(15,23,42,0.12)",
             }}>
               {skill.label}
             </div>
@@ -437,17 +486,17 @@ export default function SkillsNetwork() {
                 height: isFocused ? 52 : 44,
                 borderRadius: "50%",
                 background: isFocused
-                  ? `radial-gradient(circle at 40% 35%, ${cat.color}28, ${cat.color}08)`
-                  : "rgba(12,16,24,0.9)",
-                border: `${isFocused ? 2 : 1}px solid ${isFocused ? cat.color : "rgba(255,255,255,0.1)"}`,
+                  ? `radial-gradient(circle at 40% 35%, ${color}28, ${color}08)`
+                  : isDark ? "rgba(12,16,24,0.9)" : "rgba(255,255,255,0.96)",
+                border: `${isFocused ? 2 : 1}px solid ${isFocused ? color : isDark ? "rgba(255,255,255,0.1)" : "rgba(148,163,184,0.42)"}`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 transition: "all 0.3s ease",
                 boxShadow: isFocused
-                  ? `0 0 20px ${cat.color}40, inset 0 0 8px ${cat.color}10`
-                  : "0 2px 12px rgba(0,0,0,0.4)",
-                color: isFocused ? cat.color : "rgba(255,255,255,0.45)",
+                  ? `0 0 20px ${color}30, inset 0 0 8px ${color}10`
+                  : isDark ? "0 2px 12px rgba(0,0,0,0.4)" : "0 2px 12px rgba(15,23,42,0.10)",
+                color: isFocused ? color : isDark ? "rgba(255,255,255,0.45)" : "#64748b",
               }}
             >
               <skill.Icon size={isFocused ? 20 : 17} />
@@ -467,9 +516,9 @@ export default function SkillsNetwork() {
         zIndex: 20,
       }}>
         <div style={{
-          background: "rgba(10,13,20,0.95)",
+          background: isDark ? "rgba(10,13,20,0.95)" : "rgba(255,255,255,0.96)",
           backdropFilter: "blur(12px)",
-          border: `1px solid ${activeSkill ? activeSkill.expColor : activeCategory ? activeCategory.color : "rgba(255,255,255,0.08)"}30`,
+          border: `1px solid ${activeSkill ? getSkillColor(activeSkill, isDark) : activeCategory ? getCategoryColor(activeCategory, isDark) : isDark ? "rgba(255,255,255,0.08)" : "rgba(148,163,184,0.3)"}30`,
           borderRadius: 14,
           padding: activeNode ? "16px 18px" : "0",
           height: activeNode ? "auto" : 0,
@@ -478,7 +527,7 @@ export default function SkillsNetwork() {
           transform: activeNode ? "translateY(0) scale(1)" : "translateY(8px) scale(0.97)",
           transition: "opacity 0.25s ease, transform 0.25s ease, padding 0.2s, height 0.2s, border-color 0.3s",
           boxShadow: activeNode
-            ? `0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px ${activeSkill ? activeSkill.expColor : activeCategory ? activeCategory.color : "transparent"}18`
+            ? `${isDark ? "0 8px 32px rgba(0,0,0,0.6)" : "0 8px 28px rgba(15,23,42,0.12)"}, 0 0 0 1px ${activeSkill ? getSkillColor(activeSkill, isDark) : activeCategory ? getCategoryColor(activeCategory, isDark) : "transparent"}18`
             : "none",
         }}>
           {activeSkill && (
@@ -486,38 +535,38 @@ export default function SkillsNetwork() {
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
                 <div style={{
                   width: 36, height: 36, borderRadius: "50%",
-                  background: `${activeSkill.expColor}18`,
-                  border: `1px solid ${activeSkill.expColor}40`,
+                  background: `${activeSkillColor}18`,
+                  border: `1px solid ${activeSkillColor}40`,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  color: activeSkill.expColor, flexShrink: 0,
+                  color: activeSkillColor, flexShrink: 0,
                 }}>
                   <activeSkill.Icon size={18} />
                 </div>
                 <div>
-                  <div style={{ color: "#fff", fontWeight: 700, fontSize: 14, letterSpacing: "0.04em" }}>
+                  <div style={{ color: isDark ? "#fff" : "#0f172a", fontWeight: 700, fontSize: 14, letterSpacing: "0.04em" }}>
                     {activeSkill.label}
                   </div>
-                  <div style={{ color: activeSkill.expColor, fontSize: 10, letterSpacing: "0.1em", marginTop: 1 }}>
+                  <div style={{ color: activeSkillColor, fontSize: 10, letterSpacing: "0.1em", marginTop: 1 }}>
                     {activeSkill.exp.toUpperCase()}
                   </div>
                 </div>
-                <div style={{ marginLeft: "auto", color: activeSkill.expColor }}>
+                <div style={{ marginLeft: "auto", color: activeSkillColor }}>
                   <ExpDots level={activeSkill.exp} />
                 </div>
               </div>
-              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, lineHeight: 1.6, margin: 0 }}>
+              <p style={{ color: isDark ? "rgba(255,255,255,0.62)" : "#475569", fontSize: 12, lineHeight: 1.6, margin: 0 }}>
                 {activeSkill.desc}
               </p>
               <div style={{
                 marginTop: 10, paddingTop: 10,
-                borderTop: "1px solid rgba(255,255,255,0.06)",
+                borderTop: `1px solid ${isDark ? "rgba(255,255,255,0.06)" : "rgba(148,163,184,0.25)"}`,
                 display: "flex", alignItems: "center", gap: 6,
               }}>
                 <div style={{
                   width: 6, height: 6, borderRadius: "50%",
-                  background: getCategoryById(activeSkill.parent).color,
+                  background: getCategoryColor(getCategoryById(activeSkill.parent), isDark),
                 }} />
-                <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 10, letterSpacing: "0.08em" }}>
+                <span style={{ color: isDark ? "rgba(255,255,255,0.5)" : "#64748b", fontSize: 10, letterSpacing: "0.08em" }}>
                   {getCategoryById(activeSkill.parent).label.toUpperCase()}
                 </span>
               </div>
@@ -528,10 +577,10 @@ export default function SkillsNetwork() {
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                 <div style={{
                   width: 10, height: 10, borderRadius: "50%",
-                  background: activeCategory.color,
-                  boxShadow: `0 0 8px ${activeCategory.color}`,
+                  background: activeCategoryColor,
+                  boxShadow: `0 0 8px ${activeCategoryColor}`,
                 }} />
-                <span style={{ color: activeCategory.color, fontWeight: 700, fontSize: 13, letterSpacing: "0.08em" }}>
+                <span style={{ color: activeCategoryColor, fontWeight: 700, fontSize: 13, letterSpacing: "0.08em" }}>
                   {activeCategory.label.toUpperCase()}
                 </span>
               </div>
@@ -541,13 +590,13 @@ export default function SkillsNetwork() {
                     key={s.id}
                     style={{
                       display: "flex", alignItems: "center", gap: 5,
-                      background: `${activeCategory.color}12`,
-                      border: `1px solid ${activeCategory.color}30`,
+                      background: `${activeCategoryColor}12`,
+                      border: `1px solid ${activeCategoryColor}30`,
                       borderRadius: 8, padding: "4px 10px",
-                      fontSize: 11, color: "rgba(255,255,255,0.7)",
+                      fontSize: 11, color: isDark ? "rgba(255,255,255,0.7)" : "#334155",
                     }}
                   >
-                    <span style={{ color: activeCategory.color, display: "flex" }}>
+                    <span style={{ color: activeCategoryColor, display: "flex" }}>
                       <s.Icon size={12} />
                     </span>
                     {s.label}
@@ -570,11 +619,11 @@ export default function SkillsNetwork() {
             boxShadow: "0 0 8px #10b981",
             animation: "pulse 2s ease-in-out infinite",
           }} />
-          <span style={{ color: "#3b82f6", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em" }}>
+          <span style={{ color: isDark ? "#3b82f6" : "#1d4ed8", fontSize: 10, fontWeight: 700, letterSpacing: "0.12em" }}>
             NETWORK_GRAPH.exe
           </span>
         </div>
-        <div style={{ color: "rgba(255,255,255,0.25)", fontSize: 9, letterSpacing: "0.1em" }}>
+        <div style={{ color: isDark ? "rgba(255,255,255,0.35)" : "#64748b", fontSize: 9, letterSpacing: "0.1em" }}>
           {active ? `NODE: ${active.toUpperCase()}` : "STATUS: ONLINE · 5 DOMAINS · 10 SKILLS"}
         </div>
       </div>
@@ -591,11 +640,13 @@ export default function SkillsNetwork() {
               {Array.from({ length: 3 }).map((_, i) => (
                 <div key={i} style={{
                   width: 5, height: 5, borderRadius: "50%",
-                  background: i < dots ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.1)",
+                  background: i < dots
+                    ? isDark ? "rgba(255,255,255,0.5)" : "rgba(71,85,105,0.7)"
+                    : isDark ? "rgba(255,255,255,0.1)" : "rgba(148,163,184,0.35)",
                 }} />
               ))}
             </div>
-            <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 9, letterSpacing: "0.08em" }}>
+            <span style={{ color: isDark ? "rgba(255,255,255,0.35)" : "#64748b", fontSize: 9, letterSpacing: "0.08em" }}>
               {label.toUpperCase()}
             </span>
           </div>

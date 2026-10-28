@@ -48,11 +48,13 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
     if (errors[name]) setErrors((e) => ({ ...e, [name]: "" }));
+    if (submitError) setSubmitError("");
   };
 
   const handleSubmit = async (e) => {
@@ -62,12 +64,38 @@ export default function Contact() {
       setErrors(errs);
       return;
     }
+
     setSending(true);
-    // Simulate send (integrate EmailJS here)
-    await new Promise((r) => setTimeout(r, 1500));
-    setSending(false);
-    setSubmitted(true);
-    setForm(initialForm);
+    setSubmitError("");
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/archityadav959@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+          _subject: `New portfolio contact from ${form.name.trim()}`,
+          _captcha: "false",
+          _template: "table",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Unable to send message");
+      }
+
+      setSubmitted(true);
+      setForm(initialForm);
+    } catch (error) {
+      setSubmitError("Something went wrong while sending your message. Please email me directly at archityadav959@gmail.com.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const inputClass = (field) =>
@@ -87,7 +115,7 @@ export default function Contact() {
           className="mb-14"
         >
           <p className="text-primary-400 font-mono text-sm tracking-widest mb-2">
-            05. CONTACT
+            07. CONTACT
           </p>
           <h2 className="section-title">Get In Touch</h2>
           <div className="w-12 h-1 bg-gradient-to-r from-primary-500 to-violet-500 rounded-full mb-4" />
@@ -216,6 +244,9 @@ export default function Contact() {
                     </p>
                   )}
                 </div>
+                {submitError && (
+                  <p className="text-xs text-rose-400 mt-1">{submitError}</p>
+                )}
                 <button
                   type="submit"
                   disabled={sending}

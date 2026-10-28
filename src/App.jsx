@@ -6,25 +6,26 @@ import CustomCursor from "./components/CustomCursor";
 import Hero from "./sections/Hero";
 import About from "./sections/About";
 import Skills from "./sections/Skills";
+import FrontendPlayground from "./sections/FrontendPlayground";
 import Projects from "./sections/Projects";
 import Experience from "./sections/Experience";
-import SystemDesignCarousel from "./sections/SystemDesignCarousel";
 import Observability from "./sections/Observability";
+import WaterCatchGame from "./sections/WaterCatchGame";
 import Contact from "./sections/Contact";
 import Footer from "./sections/Footer";
 import TerminalMode from "./components/TerminalMode";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import { useSmoothScroll } from "./hooks/useSmoothScroll";
+import { useTheme } from "./hooks/useTheme";
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+  useTheme();
 
   useSmoothScroll();
 
   useEffect(() => {
-    // Default dark mode
-    document.documentElement.classList.add("dark");
     const timer = setTimeout(() => setLoading(false), 2200);
     return () => clearTimeout(timer);
   }, []);
@@ -55,8 +56,9 @@ function App() {
         <Skills />
         <Projects />
         <Experience />
-        <SystemDesignCarousel />
+        <FrontendPlayground />
         <Observability />
+        <WaterCatchGame />
         <Contact />
       </main>
       <Footer />
