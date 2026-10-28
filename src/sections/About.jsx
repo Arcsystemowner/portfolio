@@ -48,51 +48,30 @@ export default function About() {
             className="space-y-5 text-slate-400 leading-relaxed"
           >
             <p>
-              I'm a{" "}
-              <span className="text-white font-medium">
-                Full Stack Developer
-              </span>{" "}
-              with{" "}
-              <span className="text-primary-400 font-medium">
-                2 years of experience
-              </span>{" "}
-              building enterprise-grade applications. Currently working as{" "}
-              <span className="text-white font-medium">Software Engineer</span>{" "}
-              at{" "}
-              <span className="text-primary-400 font-medium">
-                KFin Technologies Limited
-              </span>
-              , working on critical systems monitoring 100,000+ services with
-              focus on performance and reliability.
+              I’m a <span className="text-white font-medium">Java Full Stack Developer</span> with
+              <span className="text-primary-400 font-medium"> 2+ years</span> of hands-on experience building secure,
+              high-scale enterprise systems. I work as a <span className="text-white font-medium">Software Engineer</span>{" "}
+              at <span className="text-primary-400 font-medium">KFin Technologies</span>, where I help design monitoring,
+              alerting, and health-check platforms for <span className="text-white font-medium">100,000+ services</span>.
             </p>
             <p>
-              My expertise spans{" "}
-              <span className="text-white font-medium">
-                React.js, TypeScript, Java, Spring Boot
-              </span>
-              , <span className="text-white font-medium">REST APIs</span>, and
-              modern tools like{" "}
-              <span className="text-white font-medium">
-                Redux Toolkit & PostgreSQL
-              </span>
-              . I specialize in building{" "}
-              <span className="text-white font-medium">scalable frontends</span>
-              , designing{" "}
-              <span className="text-white font-medium">efficient backends</span>
-              , and optimizing performance across the stack.
+              My stack spans <span className="text-white font-medium">Java 17, Spring Boot, React.js, Redux, PostgreSQL,
+              Kafka, Redis, Docker, and AWS</span>. I enjoy the full lifecycle of product delivery: shaping architecture,
+              building resilient backend APIs, crafting user-friendly interfaces, and optimizing performance with real-world
+              constraints in mind.
             </p>
             <p>
-              Passionate about clean code, performance optimization, and
-              building products that users love. Currently leading projects and
-              collaborating with senior engineers at KFin Technologies.
+              I’m especially interested in <span className="text-white font-medium">event-driven systems</span>,
+              <span className="text-white font-medium"> observability</span>, and <span className="text-white font-medium">AI-assisted engineering</span>.
+              I lead with ownership, enjoy mentoring teammates, and focus on software that is reliable, secure, and easy to trust.
             </p>
 
             {/* Quick stats */}
             <div className="grid grid-cols-3 gap-4 pt-4">
               {[
-                { number: "2", label: "Years Experience" },
-                { number: "100K+", label: "Services Monitored" },
-                { number: "70%", label: "Perf. Improved" },
+                { number: "2+", label: "Years" },
+                { number: "100K+", label: "Services" },
+                { number: "300+", label: "LeetCode" },
               ].map(({ number, label }) => (
                 <div key={label} className="text-center p-4 card rounded-xl">
                   <div className="text-2xl font-bold gradient-text">

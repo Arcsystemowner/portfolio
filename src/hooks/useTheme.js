@@ -3,18 +3,18 @@ import { useState, useEffect, useCallback } from 'react';
 export function useTheme() {
   const [theme, setTheme] = useState(() => {
     if (typeof window === 'undefined') return 'dark';
-    return localStorage.getItem('portfolio-theme') || 'dark';
+
+    const savedTheme = localStorage.getItem('portfolio-theme');
+    if (savedTheme) return savedTheme;
+
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   });
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === 'light') {
-      root.classList.add('light');
-      root.classList.remove('dark');
-    } else {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    }
+    root.classList.toggle('light', theme === 'light');
+    root.classList.toggle('dark', theme === 'dark');
+    root.style.colorScheme = theme === 'light' ? 'light' : 'dark';
     localStorage.setItem('portfolio-theme', theme);
   }, [theme]);
 

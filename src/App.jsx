@@ -15,16 +15,16 @@ import Footer from "./sections/Footer";
 import TerminalMode from "./components/TerminalMode";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import { useSmoothScroll } from "./hooks/useSmoothScroll";
+import { useTheme } from "./hooks/useTheme";
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+  useTheme();
 
   useSmoothScroll();
 
   useEffect(() => {
-    // Default dark mode
-    document.documentElement.classList.add("dark");
     const timer = setTimeout(() => setLoading(false), 2200);
     return () => clearTimeout(timer);
   }, []);

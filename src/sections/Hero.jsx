@@ -81,7 +81,7 @@ export default function Hero() {
               className="text-primary-400 font-mono text-xs sm:text-sm mb-3 tracking-widest uppercase flex items-center gap-2"
             >
               <span className="w-4 h-px bg-primary-500/50"></span>
-              SYS.ADMIN // IDENTIFIED
+              Java Full Stack Developer
             </motion.p>
 
             {/* Name */}
@@ -115,9 +115,9 @@ export default function Hero() {
               variants={item}
               className="text-slate-400 text-sm sm:text-lg max-w-xl leading-relaxed mb-10"
             >
-              Architecting <span className="text-white font-medium">scalable distributed systems</span> and{' '}
-              <span className="text-primary-400 font-medium">real-time platforms</span>. 
-              Specializing in observability infrastructure, event-driven architecture, and enterprise-grade full-stack applications.
+              I build <span className="text-white font-medium">secure, scalable products</span> with Java, Spring Boot,
+              React, and modern cloud infrastructure. From event-driven systems to high-availability dashboards, I turn
+              complex requirements into <span className="text-primary-400 font-medium">reliable user experiences</span>.
             </motion.p>
 
             {/* CTAs */}
@@ -145,8 +145,8 @@ export default function Hero() {
               </motion.button>
 
               <motion.a
-                href="/resume.pdf"
-                download
+                href="/Archit_Yadav__Java_Full_Stack.pdf"
+                download="Archit_Yadav__Java_Full_Stack.pdf"
                 className="btn-outline w-full sm:w-auto justify-center group"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
