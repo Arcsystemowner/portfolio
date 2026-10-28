@@ -131,11 +131,27 @@
   }
 
   html.light body {
-    @apply font-sans text-slate-700 bg-slate-50 antialiased;
+    @apply font-sans text-slate-700 antialiased;
+    background-color: #edf1f8;
     background-image:
-      radial-gradient(ellipse at 20% 50%, rgb(var(--primary-500) / 0.05) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.04) 0%, transparent 50%);
+      radial-gradient(ellipse at 8% 6%, rgba(129, 140, 248, 0.18) 0%, transparent 32%),
+      radial-gradient(ellipse at 92% 20%, rgba(56, 189, 248, 0.10) 0%, transparent 30%),
+      radial-gradient(ellipse at 52% 82%, rgba(20, 184, 166, 0.08) 0%, transparent 34%),
+      linear-gradient(145deg, #f3f5fb 0%, #e9eef7 48%, #eff2f8 100%);
     background-attachment: fixed;
+  }
+
+  html.light #home {
+    background:
+      radial-gradient(ellipse at 14% 20%, rgba(129, 140, 248, 0.12) 0%, transparent 42%),
+      radial-gradient(ellipse at 84% 72%, rgba(56, 189, 248, 0.09) 0%, transparent 38%);
+  }
+
+  html.light .hero-grid {
+    opacity: 0.045 !important;
+    background-image:
+      linear-gradient(rgba(71, 85, 105, 0.6) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(71, 85, 105, 0.6) 1px, transparent 1px) !important;
   }
 
   ::selection {
@@ -182,15 +198,27 @@
   }
 
   html.light .card {
-    @apply bg-white/80 border-slate-200/80;
+    @apply bg-white/85 border-slate-200/80 shadow-[0_20px_45px_rgba(15,23,42,0.06)];
   }
 
   html.light .card:hover {
     @apply border-primary-300/60;
-    box-shadow: 0 20px 40px rgb(var(--primary-500) / 0.08);
+    box-shadow: 0 24px 50px rgba(99, 102, 241, 0.12), 0 0 0 1px rgba(99, 102, 241, 0.08);
   }
 
   /* Buttons */
+  html.light .btn-primary {
+    background: #4338ca;
+    color: #fff !important;
+    box-shadow: 0 8px 18px rgba(67, 56, 202, 0.2);
+  }
+
+  html.light .btn-primary:hover {
+    background: #3730a3;
+    color: #fff !important;
+    box-shadow: 0 12px 24px rgba(67, 56, 202, 0.26);
+  }
+
   .btn-primary {
     @apply inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-500 text-white
            font-semibold px-6 py-3 rounded-xl transition-all duration-300 cursor-none;
@@ -209,7 +237,27 @@
   }
 
   html.light .btn-outline {
-    @apply border-primary-400/60 text-primary-600 hover:text-primary-700 hover:bg-primary-50;
+    background: rgba(255, 255, 255, 0.84);
+    border-color: #c7d2fe;
+    color: #3730a3 !important;
+    box-shadow: 0 6px 16px rgba(30, 41, 59, 0.06);
+  }
+
+  html.light .btn-outline:hover {
+    background: #eef2ff;
+    border-color: #818cf8;
+    color: #312e81 !important;
+    box-shadow: 0 10px 22px rgba(67, 56, 202, 0.12);
+  }
+
+  html.light .btn-primary *,
+  html.light .btn-outline * {
+    color: inherit !important;
+  }
+
+  :is(a, button, input, textarea, select):focus-visible {
+    outline: 3px solid rgb(var(--primary-500) / 0.45);
+    outline-offset: 3px;
   }
 
   /* Gradient text */
@@ -227,7 +275,7 @@
   }
 
   html.light .glass {
-    @apply bg-white/80 border-slate-200;
+    @apply bg-white/80 border-slate-200 shadow-[0_12px_30px_rgba(15,23,42,0.05)];
   }
 
   /* Nav link */
@@ -240,11 +288,6 @@
   }
 
   /* Light mode text overrides */
-  html.light p,
-  html.light span:not(.gradient-text) {
-    color: rgb(71, 85, 105);
-  }
-
   html.light .text-white {
     color: rgb(15, 23, 42) !important;
   }
@@ -282,7 +325,20 @@
   html.light .bg-white\/3 {
     @apply bg-slate-50;
   }
+
+  html.light .bg-primary-500\/10,
+  html.light .bg-primary-500\/20,
+  html.light .bg-primary-500\/30 {
+    background-color: rgba(99, 102, 241, 0.08);
+  }
+
+  html.light .border-primary-500\/20,
+  html.light .border-primary-500\/30,
+  html.light .border-primary-500\/40 {
+    border-color: rgba(99, 102, 241, 0.2);
+  }
 }
+
 
 @layer utilities {
   /* Blink caret for typing animation */

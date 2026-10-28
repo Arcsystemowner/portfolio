@@ -18,6 +18,17 @@ export function useTheme() {
     localStorage.setItem('portfolio-theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    const syncTheme = () => {
+      const nextTheme = root.classList.contains('light') ? 'light' : 'dark';
+      setTheme((currentTheme) => currentTheme === nextTheme ? currentTheme : nextTheme);
+    };
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   }, []);

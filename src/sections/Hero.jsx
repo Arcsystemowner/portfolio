@@ -5,6 +5,7 @@ import { SiReact, SiSpringboot, SiJavascript, SiDocker } from 'react-icons/si';
 import { FaJava } from 'react-icons/fa';
 import React, { Suspense, lazy } from 'react';
 import TypingAnimation from '../components/TypingAnimation';
+import { useTheme } from '../hooks/useTheme';
 
 const ParticleBackground = lazy(() => import('../components/ParticleBackground'));
 
@@ -25,7 +26,15 @@ const techOrbit = [
   { Icon: SiDocker, color: '#2496ed', label: 'Docker' },
 ];
 
+const impactHighlights = [
+  { value: '100K+', label: 'services monitored' },
+  { value: '85%', label: 'MTTA reduction' },
+  { value: '<100ms', label: 'API latency' },
+];
+
 export default function Hero() {
+  const { isDark } = useTheme();
+
   const scrollTo = (id) => {
     if (window.lenis) {
       window.lenis.scrollTo(id, { offset: -64 });
@@ -44,7 +53,7 @@ export default function Hero() {
       className="relative min-h-screen flex items-center overflow-hidden pt-20"
     >
       {/* Particle canvas */}
-      <Suspense fallback={<div className="absolute inset-0 bg-dark-900 pointer-events-none z-0" />}>
+      <Suspense fallback={<div className={`absolute inset-0 pointer-events-none z-0 ${isDark ? 'bg-dark-900' : 'bg-slate-100'}`} />}>
         <ParticleBackground />
       </Suspense>
 
@@ -55,7 +64,7 @@ export default function Hero() {
         <div className="absolute bottom-0 left-1/3 w-[300px] h-[300px] bg-cyan-600/8 rounded-full blur-[80px]" />
         {/* Grid overlay */}
         <div
-          className="absolute inset-0 opacity-[0.025]"
+          className="hero-grid absolute inset-0 opacity-[0.025]"
           style={{
             backgroundImage:
               'linear-gradient(rgba(255,255,255,.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.6) 1px, transparent 1px)',
@@ -120,10 +129,34 @@ export default function Hero() {
               complex requirements into <span className="text-primary-400 font-medium">reliable user experiences</span>.
             </motion.p>
 
+            <motion.div
+              variants={item}
+              className="mb-8 grid max-w-xl grid-cols-3 gap-2 sm:gap-3"
+              aria-label="Career impact highlights"
+            >
+              {impactHighlights.map(({ value, label }) => (
+                <div
+                  key={label}
+                  className={`rounded-xl border px-3 py-3 ${
+                    isDark
+                      ? 'border-white/10 bg-white/[0.035]'
+                      : 'border-slate-200/80 bg-white/75 shadow-sm shadow-slate-900/[0.03]'
+                  }`}
+                >
+                  <p className={`font-mono text-lg font-bold sm:text-xl ${isDark ? 'text-primary-300' : 'text-indigo-700'}`}>
+                    {value}
+                  </p>
+                  <p className={`mt-1 text-[9px] leading-tight sm:text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                    {label}
+                  </p>
+                </div>
+              ))}
+            </motion.div>
+
             {/* CTAs */}
             <motion.div
               variants={item}
-              className="grid grid-cols-1 sm:flex sm:flex-row gap-3.5 sm:gap-4 mb-12 w-full max-w-md sm:max-w-none"
+              className="grid grid-cols-1 sm:flex sm:flex-row gap-3.5 sm:gap-4 mb-10 w-full max-w-md sm:max-w-none"
             >
               <motion.button
                 onClick={() => scrollTo('#projects')}
@@ -163,7 +196,7 @@ export default function Hero() {
 
               <motion.button
                 onClick={() => scrollTo('#contact')}
-                className="btn-outline w-full sm:w-auto justify-center border-transparent bg-dark-800 hover:bg-dark-700 hover:text-white group"
+                className="btn-outline w-full sm:w-auto justify-center group"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
                 id="hero-contact-btn"
@@ -178,7 +211,7 @@ export default function Hero() {
                 href="https://github.com/Arcsystemowner"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-slate-500 hover:text-white transition-colors group"
+                className={`flex items-center gap-2 transition-colors group ${isDark ? 'text-slate-500 hover:text-white' : 'text-slate-600 hover:text-indigo-700'}`}
                 whileHover={{ y: -2 }}
                 aria-label="GitHub"
                 id="hero-github-link"
@@ -192,7 +225,7 @@ export default function Hero() {
                 href="https://linkedin.com/in/archit-yadav-bb0a47187"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-slate-500 hover:text-primary-400 transition-colors group"
+                className={`flex items-center gap-2 transition-colors group ${isDark ? 'text-slate-500 hover:text-primary-400' : 'text-slate-600 hover:text-indigo-700'}`}
                 whileHover={{ y: -2 }}
                 aria-label="LinkedIn"
                 id="hero-linkedin-link"
@@ -202,7 +235,7 @@ export default function Hero() {
                   LinkedIn
                 </span>
               </motion.a>
-              <div className="hidden xs:block h-px w-8 sm:w-14 bg-white/10" />
+              <div className={`hidden xs:block h-px w-8 sm:w-14 ${isDark ? 'bg-white/10' : 'bg-slate-300'}`} />
               <span className="text-slate-600 text-xs font-mono">archityadav.dev</span>
             </motion.div>
           </motion.div>

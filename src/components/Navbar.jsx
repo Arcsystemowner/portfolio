@@ -10,6 +10,7 @@ const navLinks = [
   { label: 'Skills', href: '#skills', id: 'skills' },
   { label: 'Projects', href: '#projects', id: 'projects' },
   { label: 'Experience', href: '#experience', id: 'experience' },
+  { label: 'UI Lab', href: '#frontend-playground', id: 'frontend-playground' },
   { label: 'Contact', href: '#contact', id: 'contact' },
 ];
 
